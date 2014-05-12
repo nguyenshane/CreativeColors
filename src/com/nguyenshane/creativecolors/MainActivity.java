@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	//Test changes
+	// hello from Shane
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
