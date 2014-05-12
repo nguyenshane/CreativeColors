@@ -1,5 +1,5 @@
 package com.nguyenshane.creativecolors;
-//hello from Jacky 2
+//hello from Jacky 2 branch
 
 import android.app.Activity;
 import android.app.ActionBar;
