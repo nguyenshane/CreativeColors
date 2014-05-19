@@ -2,10 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.nguyenshane.creativecolors.MainActivity" >
-
+    tools:context="com.nguyenshane.creativecolors.MainActivity"
+    android:background="@color/bg_color" >
+    
    <TableLayout
         android:layout_width="wrap_content"
+        android:background="@color/bg_color"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true">
@@ -13,23 +15,16 @@
         <TableRow
             android:id="@+id/tableRow1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
 
-            <Button
+            <ImageButton
                 android:id="@+id/button1"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/green_button"
-                android:text="@string/empty" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/red_button"
-                android:text="@string/empty" />
+                android:background="@drawable/green_gem"
+                android:paddingLeft="@dimen/activity_vertical_margin" />
 
         </TableRow>
 
@@ -38,24 +33,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
-            <Button
+            <ImageButton
                 android:id="@+id/button3"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/yellow_button"
-                android:text="@string/empty" />
+                android:background="@drawable/yellow_gem"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/button4"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/blue_button"
-                android:text="@string/empty" />
+                android:background="@drawable/blue_gem"/>
 
         </TableRow>
+        
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
 
+            <ImageButton
+                android:id="@+id/button2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/red_gem" />
+
+        </TableRow>
        
     </TableLayout>
 
