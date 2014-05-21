@@ -1,10 +1,11 @@
 package com.nguyenshane.creativecolors;
-//hello from Jacky 2
 
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,12 +13,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 
+import com.parse.GetCallback;
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.*;
+
 public class MainActivity extends Activity {
+	static final String LOG_TAG = "MainActivity";
+	public enum Colors {GREEN, RED, YELLOW, BLUE}
+	ParseObject post;
+	ParseUser currentUser;
+	ParseQuery<ParseObject> query;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// Create the Parse object
+		query = ParseQuery.getQuery("Post");
+
+
 	}
 
 	@Override
@@ -27,7 +46,6 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	// hello from Shane
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -39,6 +57,50 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	public void onClickButton0(View v){
+		query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
+			  public void done(ParseObject gameScore, ParseException e) {
+			    if (e == null) {
+			      gameScore.put("button", 0);
+			      gameScore.saveInBackground();
+			    }
+			  }
+			});
+	}
+
+	public void onClickButton1(View v){
+		query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
+			  public void done(ParseObject gameScore, ParseException e) {
+			    if (e == null) {
+			      gameScore.put("button", 1);
+			      gameScore.saveInBackground();
+			    }
+			  }
+			});
+	}
+
+	public void onClickButton2(View v){
+		query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
+			  public void done(ParseObject gameScore, ParseException e) {
+			    if (e == null) {
+			      gameScore.put("button", 2);
+			      gameScore.saveInBackground();
+			    }
+			  }
+			});
+	}
+
+	public void onClickButton3(View v){
+		query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
+			  public void done(ParseObject gameScore, ParseException e) {
+			    if (e == null) {
+			      gameScore.put("button", 3);
+			      gameScore.saveInBackground();
+			    }
+			  }
+			});
 	}
 
 }

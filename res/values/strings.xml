@@ -5,5 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="empty"></string>
+    <string name="app_id">576200872479010</string>
+    <string name="action_sign_in_fb">Sign in using Facebook</string>
 
 </resources>

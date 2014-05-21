@@ -16,20 +16,22 @@
             android:layout_height="wrap_content" >
 
             <Button
-                android:id="@+id/button1"
+                android:id="@+id/button0"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/green_button"
-                android:text="@string/empty" />
+                android:text="@string/empty" 
+                android:onClick="onClickButton0"/>
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/button1"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/red_button"
-                android:text="@string/empty" />
+                android:text="@string/empty" 
+                android:onClick="onClickButton1"/>
 
         </TableRow>
 
@@ -39,20 +41,22 @@
             android:layout_height="wrap_content" >
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/button2"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/yellow_button"
-                android:text="@string/empty" />
+                android:text="@string/empty" 
+                android:onClick="onClickButton2"/>
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/button3"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/blue_button"
-                android:text="@string/empty" />
+                android:text="@string/empty" 
+                android:onClick="onClickButton3"/>
 
         </TableRow>
 
