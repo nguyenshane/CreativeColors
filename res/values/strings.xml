@@ -5,6 +5,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="empty"></string>
-    <color name="bg_color">#2c2c2c</color>
+    <color name="bg_color">#171717</color>
 
 </resources>
