@@ -27,36 +27,73 @@ public final class R {
     public static final class drawable {
         public static final int blue_button=0x7f020000;
         public static final int blue_gem=0x7f020001;
-        public static final int green_button=0x7f020002;
-        public static final int green_gem=0x7f020003;
-        public static final int ic_launcher=0x7f020004;
-        public static final int logo=0x7f020005;
-        public static final int red_button=0x7f020006;
-        public static final int red_gem=0x7f020007;
-        public static final int yellow_button=0x7f020008;
-        public static final int yellow_gem=0x7f020009;
+        public static final int blue_gem_glow=0x7f020002;
+        public static final int button_login=0x7f020003;
+        public static final int green_button=0x7f020004;
+        public static final int green_gem=0x7f020005;
+        public static final int green_gem_glow=0x7f020006;
+        public static final int ic_launcher=0x7f020007;
+        public static final int login_button_focused=0x7f020008;
+        public static final int login_button_normal=0x7f020009;
+        public static final int login_button_pressed=0x7f02000a;
+        public static final int logo=0x7f02000b;
+        public static final int pick_axe=0x7f02000c;
+        public static final int red_button=0x7f02000d;
+        public static final int red_gem=0x7f02000e;
+        public static final int red_gem_glow=0x7f02000f;
+        public static final int table_round_shape=0x7f020010;
+        public static final int yellow_button=0x7f020011;
+        public static final int yellow_gem=0x7f020012;
+        public static final int yellow_gem_glow=0x7f020013;
     }
     public static final class id {
-        public static final int action_settings=0x7f090007;
-        public static final int button1=0x7f090001;
-        public static final int button2=0x7f090006;
-        public static final int button3=0x7f090003;
-        public static final int button4=0x7f090004;
-        public static final int tableRow1=0x7f090000;
-        public static final int tableRow2=0x7f090002;
-        public static final int tableRow3=0x7f090005;
+        public static final int action_forgot_password=0x7f09000f;
+        public static final int action_settings=0x7f090010;
+        public static final int button1=0x7f090009;
+        public static final int button2=0x7f09000e;
+        public static final int button3=0x7f09000b;
+        public static final int button4=0x7f09000c;
+        public static final int email=0x7f090003;
+        public static final int login=0x7f090005;
+        public static final int login_form=0x7f090002;
+        public static final int login_status=0x7f090000;
+        public static final int login_status_message=0x7f090001;
+        public static final int password=0x7f090004;
+        public static final int sign_in_button=0x7f090006;
+        public static final int sign_in_fb=0x7f090007;
+        public static final int tableRow1=0x7f090008;
+        public static final int tableRow2=0x7f09000a;
+        public static final int tableRow3=0x7f09000d;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
+        public static final int activity_login=0x7f030000;
+        public static final int activity_main=0x7f030001;
+        public static final int mine_activity=0x7f030002;
     }
     public static final class menu {
-        public static final int main=0x7f080000;
+        public static final int login=0x7f080000;
+        public static final int main=0x7f080001;
     }
     public static final class string {
+        public static final int action_forgot_password=0x7f05000b;
         public static final int action_settings=0x7f050002;
+        public static final int action_sign_in_fb=0x7f050005;
+        public static final int action_sign_in_register=0x7f050009;
+        public static final int action_sign_in_short=0x7f05000a;
+        public static final int app_id=0x7f050004;
         public static final int app_name=0x7f050000;
         public static final int empty=0x7f050003;
+        public static final int error_field_required=0x7f050010;
+        public static final int error_incorrect_password=0x7f05000f;
+        public static final int error_invalid_email=0x7f05000d;
+        public static final int error_invalid_password=0x7f05000e;
         public static final int hello_world=0x7f050001;
+        public static final int login_progress_signing_in=0x7f05000c;
+        /**  Strings related to login 
+         */
+        public static final int prompt_email=0x7f050007;
+        public static final int prompt_password=0x7f050008;
+        public static final int title_activity_login=0x7f050006;
     }
     public static final class style {
         /** 
@@ -85,5 +122,6 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f070001;
+        public static final int LoginFormContainer=0x7f070002;
     }
 }
