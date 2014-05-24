@@ -8,7 +8,7 @@
     
    <TableLayout
         android:layout_width="wrap_content"
-        android:background="@color/bg_color"
+        
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true">
 
@@ -19,12 +19,13 @@
             android:gravity="center_horizontal" >
 
             <ImageButton
-                android:id="@+id/button1"
+                android:id="@+id/button0"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/green_gem"
-                android:paddingLeft="@dimen/activity_vertical_margin" />
+                android:background="@drawable/green_button_controller"
+                android:paddingLeft="@dimen/activity_vertical_margin" 
+                android:onClick="onClickButton0"/>
 
         </TableRow>
 
@@ -34,18 +35,20 @@
             android:layout_height="wrap_content" >
 
             <ImageButton
-                android:id="@+id/button3"
+                android:id="@+id/button1"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/yellow_gem" />
+                android:onClick="onClickButton1"
+                android:background="@drawable/yellow_button_controller" />
 
             <ImageButton
-                android:id="@+id/button4"
+                android:id="@+id/button2"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/blue_gem"/>
+                android:onClick="onClickButton2"
+                android:background="@drawable/blue_button_controller" />>
 
         </TableRow>
         
@@ -56,11 +59,12 @@
             android:gravity="center_horizontal" >
 
             <ImageButton
-                android:id="@+id/button2"
+                android:id="@+id/button3"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/red_gem" />
+                android:onClick="onClickButton3"
+                android:background="@drawable/red_button_controller" />
 
         </TableRow>
        

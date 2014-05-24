@@ -1,30 +1,39 @@
 package com.nguyenshane.creativecolors;
 
+import java.util.ArrayList;
+import java.util.Timer;
+
 import android.app.Activity;
 import android.graphics.LightingColorFilter;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.R;
+//import com.parse.R;
 
 public class MainActivity extends Activity {
 	static final String LOG_TAG = "MainActivity";
 	public enum Colors {GREEN, RED, YELLOW, BLUE}
-	ParseObject post;
-	ParseUser currentUser;
-	ParseQuery<ParseObject> query;
-	
+	private ParseObject post;
+	private ParseUser currentUser;
+	private ParseQuery<ParseObject> query;
+	private ImageButton ib;
+	private int Rid, Rcontroller, Rglow;
+
 	//Buttons 
 	ImageButton imageButton;
 
@@ -36,7 +45,19 @@ public class MainActivity extends Activity {
 		// Create the Parse object
 		query = ParseQuery.getQuery("Post");
 
-
+		ArrayList<Integer> arrayButton = new ArrayList<Integer>();
+		arrayButton.add(0);
+		arrayButton.add(1);
+		arrayButton.add(2);
+		arrayButton.add(3);
+		arrayButton.add(2);
+		arrayButton.add(3);
+		arrayButton.add(1);
+		arrayButton.add(0);
+		
+		glowButtonArray(arrayButton,1000);
+		
+		//glowButton(0,1000);
 	}
 
 	@Override
@@ -59,86 +80,131 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void onClickButton0(View v){
-		//changing to glow effect after press
-		imageButton= (ImageButton)findViewById(R.id.button1);
-	    imageButton.setOnClickListener(imgButtonHandler);
-	    
-
-		
+	public void onClickButton0(View v){	
 		//Parse Code
 		query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
-			  public void done(ParseObject gameScore, ParseException e) {
-			    if (e == null) {
-			      gameScore.put("button", 0);
-			      gameScore.saveInBackground();
-			    }
-			  }
-			});
+			public void done(ParseObject pObj, ParseException e) {
+				if (e == null) {
+					pObj.put("button", 0);
+					pObj.saveInBackground();
+				}
+			}
+		});
 	}
-	
-    View.OnClickListener imgButtonHandler = new View.OnClickListener() {
-        public void onClick(View v) {
-            imageButton.setBackgroundResource(R.drawable.green_gem_glow);
-        }
-    };
 
 	public void onClickButton1(View v){
 		query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
-			  public void done(ParseObject gameScore, ParseException e) {
-			    if (e == null) {
-			      gameScore.put("button", 1); //pushing notification to the cloud
-			      gameScore.saveInBackground();
-			    }
-			  }
-			});
+			public void done(ParseObject pObj, ParseException e) {
+				if (e == null) {
+					pObj.put("button", 1); //pushing notification to the cloud
+					pObj.saveInBackground();
+				}
+			}
+		});
 	}
 
 	public void onClickButton2(View v){
 		query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
-			  public void done(ParseObject gameScore, ParseException e) {
-			    if (e == null) {
-			      gameScore.put("button", 2); //pushing notifications to the cloud
-			      gameScore.saveInBackground();
-			    }
-			  }
-			});
+			public void done(ParseObject pObj, ParseException e) {
+				if (e == null) {
+					pObj.put("button", 2); //pushing notifications to the cloud
+					pObj.saveInBackground();
+				}
+			}
+		});
 	}
 
 	public void onClickButton3(View v){
 		query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
-			  public void done(ParseObject gameScore, ParseException e) {
-			    if (e == null) {
-			      gameScore.put("button", 3);
-			      gameScore.saveInBackground();
-			    }
-			  }
-			});
+			public void done(ParseObject pObj, ParseException e) {
+				if (e == null) {
+					pObj.put("button", 3);
+					pObj.saveInBackground();
+				}
+			}
+		});
 	}
 	
+	public void glowButtonArray(final ArrayList<Integer> arrayButton, final long duration){
+		//glowButton(arrayButton.get(0), duration);
+		
+		CountDownTimer timer2 = new CountDownTimer(duration*(arrayButton.size()+1), duration){
+			int count = 0;
+			
+			public void onTick(long remainingTimeMillis){
+				glowButton(arrayButton.get(count), duration);
+				Log.d(LOG_TAG,arrayButton.get(count).toString());
+				count++;
+				
+			}
+			public void onFinish(){
+				//glowButton(arrayButton.get(count), duration);
+				//Log.d(LOG_TAG,arrayButton.get(count).toString());
+			}
+		}.start();
+		
+	}
+
+
+	public void glowButton(int buttonId, long duration){
+		switch(buttonId) {
+			case 0: Rid = R.id.button0; 
+					Rcontroller = R.drawable.green_button_controller;
+					Rglow = R.drawable.green_gem_glow;
+					break;
+			case 1: Rid = R.id.button1; 
+					Rcontroller = R.drawable.yellow_button_controller;
+					Rglow = R.drawable.yellow_gem_glow;
+					break;
+			case 2: Rid = R.id.button2; 
+					Rcontroller = R.drawable.blue_button_controller;
+					Rglow = R.drawable.blue_gem_glow;
+					break;
+			case 3: Rid = R.id.button3; 
+					Rcontroller = R.drawable.red_button_controller;
+					Rglow = R.drawable.red_gem_glow;
+					break;
+			default:Rid = R.id.button0; 
+					Rcontroller = R.drawable.green_button_controller;
+					Rglow = R.drawable.green_gem_glow;
+					break;
+		}
+
+		ib = (ImageButton) findViewById(Rid);
+		ib.setBackgroundResource(Rglow);
+		
+		CountDownTimer timer = new CountDownTimer(duration-5, duration-5){
+			public void onTick(long remainingTimeMillis){}
+			public void onFinish(){
+				ib.setBackgroundResource(Rcontroller);
+			}
+		}.start();
+
+	}
+
 	/**These methods are for notifying the other client that
 	 * a new pattern has been submitted **/
-	
+
 	//Button 0
 	public void buttonGlow0(){
-		
+
 	}
-	
+
 	//Button 1
 	public void buttonGlow1(){
-		
+
 	}
-	
+
 	//Button 2
 	public void buttonGlow2(){
-		
+
 	}
-	
+
 	//Button 3
 	public void buttonGlow3(){
-	
-	//Button GLOW EFFECT//
-	button.setOnTouchListener(new OnTouchListener() {
+
+		//Button GLOW EFFECT//
+		/*button.setOnTouchListener(new OnTouchListener() {
 	    @Override
 	    public boolean onTouch(View v, MotionEvent event) {
 	        switch (event.getAction()) {
@@ -161,7 +227,7 @@ public class MainActivity extends Activity {
 	                setColorFilter(v, null);
 	                break;
 	        }
-	        return false;
+	        return false; 
 	    }
 
 	    private void setColorFilter(View v, Integer filter) {
@@ -174,7 +240,7 @@ public class MainActivity extends Activity {
 	        // required on Android 2.3.7 for filter change to take effect (but not on 4.0.4)
 	        v.getBackground().invalidateSelf();
 	    }
-	});
+	}); */
 
 	}
 }
