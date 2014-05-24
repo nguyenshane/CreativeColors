@@ -1,3 +1,6 @@
+// Some notes:
+// Status : 0 = offline, 1 = ready to play, 2 = my turn, 3 = opp turn, 4 = I won, 5 = opp won
+
 package com.nguyenshane.creativecolors;
 
 import java.util.ArrayList;
@@ -23,16 +26,21 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-//import com.parse.R;
+import com.parse.ParseAnalytics;
+import com.parse.ParseInstallation;
+import com.parse.PushService;
 
 public class MainActivity extends Activity {
 	static final String LOG_TAG = "MainActivity";
 	public enum Colors {GREEN, RED, YELLOW, BLUE}
 	private ParseObject post;
-	private ParseUser currentUser;
+	private ParseUser currentUser, currOpp;
 	private ParseQuery<ParseObject> query;
 	private ImageButton ib;
 	private int Rid, Rcontroller, Rglow;
+	private boolean isMyTurn;
+	private ArrayList<Integer> myArrayButton, oppArrayButton;
+	
 
 	//Buttons 
 	ImageButton imageButton;
@@ -44,6 +52,9 @@ public class MainActivity extends Activity {
 
 		// Create the Parse object
 		query = ParseQuery.getQuery("Post");
+		PushService.setDefaultPushCallback(this, MainActivity.class);
+		PushService.subscribe(this, "pJDqv2DPP4", MainActivity.class);
+		ParseInstallation.getCurrentInstallation().saveInBackground();
 
 		ArrayList<Integer> arrayButton = new ArrayList<Integer>();
 		arrayButton.add(0);
@@ -55,7 +66,9 @@ public class MainActivity extends Activity {
 		arrayButton.add(1);
 		arrayButton.add(0);
 		
+		//disableButtons();
 		glowButtonArray(arrayButton,1000);
+		//enableButtons();
 		
 		//glowButton(0,1000);
 	}
@@ -78,6 +91,28 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void checkTurn(){
+		int status = currentUser.getInt("status");
+		if(status == 2) isMyTurn = true;
+		else isMyTurn = false;
+	}
+	
+	public void nextTurn(){
+		if (isMyTurn)
+			currentUser.put("status", 2);
+		else currentUser.put("status", 3);
+	}
+	
+	
+	//setup new game
+	public void newGame(){
+		currentUser = ParseUser.getCurrentUser();
+		if(isMyTurn)
+		currentUser.put("status", 2);
+		currentUser.saveInBackground();
+		
 	}
 
 	public void onClickButton0(View v){	
@@ -126,7 +161,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public void glowButtonArray(final ArrayList<Integer> arrayButton, final long duration){
-		//glowButton(arrayButton.get(0), duration);
+		disableButtons();
 		
 		CountDownTimer timer2 = new CountDownTimer(duration*(arrayButton.size()+1), duration){
 			int count = 0;
@@ -138,12 +173,33 @@ public class MainActivity extends Activity {
 				
 			}
 			public void onFinish(){
-				//glowButton(arrayButton.get(count), duration);
-				//Log.d(LOG_TAG,arrayButton.get(count).toString());
+				enableButtons();
 			}
 		}.start();
 		
 	}
+	
+	public void disableButtons(){
+			ImageButton tmp = (ImageButton) findViewById(R.id.button0);
+			tmp.setClickable(false); tmp.setEnabled(false);
+			tmp = (ImageButton) findViewById(R.id.button1);
+			tmp.setClickable(false); tmp.setEnabled(false);
+			tmp = (ImageButton) findViewById(R.id.button2);
+			tmp.setClickable(false); tmp.setEnabled(false);
+			tmp = (ImageButton) findViewById(R.id.button3);
+			tmp.setClickable(false); tmp.setEnabled(false);
+	}
+	
+	public void enableButtons(){
+		ImageButton tmp = (ImageButton) findViewById(R.id.button0);
+		tmp.setClickable(true); tmp.setEnabled(true);
+		tmp = (ImageButton) findViewById(R.id.button1);
+		tmp.setClickable(true); tmp.setEnabled(true);
+		tmp = (ImageButton) findViewById(R.id.button2);
+		tmp.setClickable(true); tmp.setEnabled(true);
+		tmp = (ImageButton) findViewById(R.id.button3);
+		tmp.setClickable(true); tmp.setEnabled(true);
+}
 
 
 	public void glowButton(int buttonId, long duration){
