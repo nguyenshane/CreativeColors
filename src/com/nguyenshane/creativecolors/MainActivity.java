@@ -3,14 +3,19 @@
 
 package com.nguyenshane.creativecolors;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Timer;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
@@ -25,6 +30,8 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -47,6 +54,7 @@ public class MainActivity extends Activity {
 	private boolean isMyTurn, isQuest;
 	private ArrayList<Integer> myArrayButton, oppArrayButton;
 	private String oppChannel;
+	
 
 
 	//Buttons 
@@ -106,14 +114,28 @@ public class MainActivity extends Activity {
 	}
 
 	public void nextTurn(){
-		if (isMyTurn){
-			currentUser.put("status", 2);
+		// next turn is my turn
+		if (!isMyTurn){
+			//currentUser.put("status", 2);
 			enableButtons();
+			isMyTurn = true;	
 		}
+		// next turn is opp turn
 		else { 
-			currentUser.put("status", 3);
+			//currentUser.put("status", 3);
 			disableButtons();
+			pullOppArray();
+			isMyTurn = false;
+			glowButtonArray(oppArrayButton,1000);
+			nextTurn();
 		}
+		/*
+		try {
+			currentUser.save();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 	}
 
 
@@ -143,12 +165,49 @@ public class MainActivity extends Activity {
 			pushToOpp.sendInBackground(new SendCallback() {
 				@Override
 				public void done(ParseException e) {
-					if (e != null) ;
+					myArrayButton.clear();
+					pullOppArray();
+					
 					//Something wrong with push
+					if (e != null) ;
+					
 				}
 			});
 		} catch (JSONException e) {e.printStackTrace();}
 
+	}
+
+	public void pullOppArray(){
+		IntentFilter intentFilter = new IntentFilter("pushedArrayButton");
+		BroadcastReceiver pushReceiver;
+		pushReceiver = new BroadcastReceiver() {
+			public void onReceive(Context context, Intent intent) {
+				Bundle extras = intent.getExtras();
+				String message = extras != null ? extras.getString("com.parse.Data") : ""; 
+				
+				// Parsing JSON to ArrayButton
+				JSONObject jObject;
+				try {
+					jObject = new JSONObject(message);
+					Gson gson = new Gson();
+					Type arrayButtonType = new TypeToken<ArrayList<Integer>>() {}.getType();
+					oppArrayButton = gson.fromJson(jObject.getString("pushedArrayButton"),arrayButtonType);
+					
+					Log.d(LOG_TAG,"oppArrayButton pulled: " + oppArrayButton);
+					
+					
+				} catch (JSONException e) {	e.printStackTrace();} 
+				
+				
+				// Switch back to my turn
+				nextTurn();
+				
+				
+			}
+		};
+		registerReceiver(pushReceiver, intentFilter);
+		
+		
 	}
 
 	public void checkPattern(){
