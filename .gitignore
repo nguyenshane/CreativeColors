@@ -3,3 +3,8 @@ bin/
 gen/
 .metadata/
 bin/AndroidManifest.xml
+
+gen/com/nguyenshane/creativecolors/R.java
+bin/jarlist.cache
+
+gen/com/nguyenshane/creativecolors/R.java

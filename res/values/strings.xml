@@ -6,6 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="empty"></string>
     <color name="bg_color">#171717</color>
+    <color name="player_text">#FFFFFF</color>
 
     <string name="red_description">red gem button</string>
     <string name="blue_description">blue gem button</string>
@@ -13,6 +14,9 @@
     <string name="yellow_description">yellow gem button</string>
     <string name="app_id">576200872479010</string>
     <string name="action_sign_in_fb">Sign in using Facebook</string>
+    <string name ="playerInfo">player info</string>
+    
+    <string name="player">player</string>
     <!--<color name="bg_color">#2c2c2c</color>-->
 
 
