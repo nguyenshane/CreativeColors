@@ -1,4 +1,4 @@
-// Some notes:
+ //Some notes:
 // Status : 0 = offline, 1 = ready to play, 2 = my turn, 3 = opp turn, 4 = I won, 5 = opp won
 
 package com.nguyenshane.creativecolors;
@@ -12,25 +12,21 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 import android.app.Activity;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
->>>>>>> 585bf678de856b5eb195faaa27cb86da033cf7d2
 import android.graphics.LightingColorFilter;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
->>>>>>> 4fadb09014a52cb44f13c3d22704480be6a6c9b4
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -62,6 +58,7 @@ public class MainActivity extends Activity {
 
 
 	//Buttons 
+	ImageButton imageButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,20 +107,6 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-
-
-	public void onClickButton0(View v){
-		//changing to glow effect after press
-		ib = (ImageButton)findViewById(R.id.button1);
-	    View.OnClickListener imgButtonHandler = new View.OnClickListener() {
-	        public void onClick(View v) {
-	            ib.setBackgroundResource(R.drawable.green_gem_glow);
-	        }
-	    };
-	    
-	    ib.setOnClickListener(imgButtonHandler);
-	}
-	    
 	public void checkTurn(){
 		int status = currentUser.getInt("status");
 		if(status == 2) isMyTurn = true;
@@ -266,19 +249,7 @@ public class MainActivity extends Activity {
 
 	}
 
-
 	public void onClickButton1(View v){
-		//changing to glow effect after press
-		ib = (ImageButton)findViewById(R.id.button3);
-	    View.OnClickListener imgButtonHandler = new View.OnClickListener() {
-	        public void onClick(View v) {
-	            ib.setBackgroundResource(R.drawable.yellow_gem_glow);
-	        }
-	    };
-	    ib.setOnClickListener(imgButtonHandler);
-	    
-	    //Parse
-		query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
 		/*query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
 			public void done(ParseObject pObj, ParseException e) {
 				if (e == null) {
@@ -292,19 +263,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void onClickButton2(View v){
-		//changing to glow effect after press
-		ib = (ImageButton)findViewById(R.id.button4);
-	    View.OnClickListener imgButtonHandler = new View.OnClickListener() {
-	        public void onClick(View v) {
-	            ib.setBackgroundResource(R.drawable.blue_gem_glow);
-	        }
-	    };
-	    ib.setOnClickListener(imgButtonHandler);
-	    
-	    //Parse
-		query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
 		/*query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
-
 			public void done(ParseObject pObj, ParseException e) {
 				if (e == null) {
 					pObj.put("button", 2); //pushing notifications to the cloud
@@ -317,17 +276,6 @@ public class MainActivity extends Activity {
 	}
 
 	public void onClickButton3(View v){
-		//changing to glow effect after press
-		ib = (ImageButton)findViewById(R.id.button2);
-	    View.OnClickListener imgButtonHandler = new View.OnClickListener() {
-	        public void onClick(View v) {
-	            ib.setBackgroundResource(R.drawable.red_gem_glow);
-	        }
-	    };
-	    ib.setOnClickListener(imgButtonHandler);
-	    
-	    //Parse
-		query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
 		/*query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
 			public void done(ParseObject pObj, ParseException e) {
 				if (e == null) {
@@ -358,32 +306,6 @@ public class MainActivity extends Activity {
 		}.start();
 
 	}
-
-
-	/**This method is for notifying the other client that
-	 * a new pattern has been submitted - The glow effect**/
-	public void glowButton(int buttonId, long duration){
-		switch(buttonId) {
-			case 0: Rid = R.id.button0; 
-					Rcontroller = R.drawable.green_button_controller; 
-					Rglow = R.drawable.green_gem_glow;
-					break;
-			case 1: Rid = R.id.button1; 
-					Rcontroller = R.drawable.yellow_button_controller;
-					Rglow = R.drawable.yellow_gem_glow;
-					break;
-			case 2: Rid = R.id.button2; 
-					Rcontroller = R.drawable.blue_button_controller;
-					Rglow = R.drawable.blue_gem_glow;
-					break;
-			case 3: Rid = R.id.button3; 
-					Rcontroller = R.drawable.red_button_controller;
-					Rglow = R.drawable.red_gem_glow;
-					break;
-			default:Rid = R.id.button0; 
-					Rcontroller = R.drawable.green_button_controller;
-					Rglow = R.drawable.green_gem_glow;
-					break;
 
 	public void disableButtons(){
 		ImageButton tmp = (ImageButton) findViewById(R.id.button0);
@@ -443,4 +365,65 @@ public class MainActivity extends Activity {
 
 	}
 
+	/**These methods are for notifying the other client that
+	 * a new pattern has been submitted **/
+
+	//Button 0
+	public void buttonGlow0(){
+
+	}
+
+	//Button 1
+	public void buttonGlow1(){
+
+	}
+
+	//Button 2
+	public void buttonGlow2(){
+
+	}
+
+	//Button 3
+	public void buttonGlow3(){
+
+		//Button GLOW EFFECT//
+		/*button.setOnTouchListener(new OnTouchListener() {
+	    @Override
+	    public boolean onTouch(View v, MotionEvent event) {
+	        switch (event.getAction()) {
+	            case MotionEvent.ACTION_DOWN:
+	                // 0x6D6D6D sets how much to darken - tweak as desired
+	                setColorFilter(v, 0x6D6D6D);
+	                break;
+	            // remove the filter when moving off the button
+	            // the same way a selector implementation would 
+	            case MotionEvent.ACTION_MOVE:
+	                Rect r = new Rect();
+	                v.getLocalVisibleRect(r);
+	                if (!r.contains((int) event.getX(), (int) event.getY())) {
+	                    setColorFilter(v, null);
+	                }
+	                break;
+	            case MotionEvent.ACTION_OUTSIDE:
+	            case MotionEvent.ACTION_CANCEL:
+	            case MotionEvent.ACTION_UP:
+	                setColorFilter(v, null);
+	                break;
+	        }
+	        return false; 
+	    }
+
+	    private void setColorFilter(View v, Integer filter) {
+	        if (filter == null) v.getBackground().clearColorFilter();
+	        else {
+	            // To lighten instead of darken, try this:
+	            LightingColorFilter lighten = new LightingColorFilter(0xFFFFFF, filter);
+	            v.getBackground().setColorFilter(lighten);
+	        }
+	        // required on Android 2.3.7 for filter change to take effect (but not on 4.0.4)
+	        v.getBackground().invalidateSelf();
+	    }
+	}); */
+
+	}
 }
