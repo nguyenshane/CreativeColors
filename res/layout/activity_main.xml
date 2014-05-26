@@ -2,35 +2,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_color"
     tools:context="com.nguyenshane.creativecolors.MainActivity" >
 
-   <TableLayout
+    <TableLayout
+        android:id="@+id/tableLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true" 
+        android:background="@color/bg_color">
 
         <TableRow
             android:id="@+id/tableRow1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
 
-            <Button
-                android:id="@+id/button1"
+            <ImageButton
+                android:id="@+id/button0"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/green_button"
-                android:text="@string/empty" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/red_button"
-                android:text="@string/empty" />
-
+                android:background="@drawable/green_button_controller"
+                android:contentDescription="@string/green_description"
+                android:onClick="onClickButton0"
+                android:paddingLeft="@dimen/activity_vertical_margin" />
         </TableRow>
 
         <TableRow
@@ -38,25 +35,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
-            <Button
+            <ImageButton
+                android:id="@+id/button1"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/yellow_gem"
+                android:contentDescription="@string/yellow_description" />
+
+            <ImageButton
+                android:id="@+id/button2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/blue_button_controller"
+                android:contentDescription="@string/blue_description"
+                android:onClick="onClickButton2" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
+
+            <ImageButton
                 android:id="@+id/button3"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/yellow_button"
-                android:text="@string/empty" />
-
-            <Button
-                android:id="@+id/button4"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/blue_button"
-                android:text="@string/empty" />
-
+                android:background="@drawable/red_button_controller"
+                android:contentDescription="@string/red_description"
+                android:onClick="onClickButton3" />
         </TableRow>
-
-       
     </TableLayout>
 
 </RelativeLayout>
