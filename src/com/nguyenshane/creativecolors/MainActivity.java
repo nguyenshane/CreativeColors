@@ -356,7 +356,7 @@ public class MainActivity extends Activity {
 		ib = (ImageButton) findViewById(Rid);
 		ib.setBackgroundResource(Rglow);
 
-		CountDownTimer timer = new CountDownTimer(duration-5, duration-5){
+		CountDownTimer timer = new CountDownTimer(duration-100, duration-100){
 			public void onTick(long remainingTimeMillis){}
 			public void onFinish(){
 				ib.setBackgroundResource(Rcontroller);

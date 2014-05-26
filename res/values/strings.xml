@@ -10,6 +10,8 @@
     <string name="app_id">576200872479010</string>
     <string name="action_sign_in_fb">Sign in using Facebook</string>
     <string name="title_friend_list">Friend List</string>
+    <string name="menuitem_refresh">Refresh</string>
+    <string name="menuitem_logout">Logout</string>
     <!--<color name="bg_color">#2c2c2c</color>-->
 
 

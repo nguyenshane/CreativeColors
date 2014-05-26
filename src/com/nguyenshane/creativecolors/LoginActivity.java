@@ -292,6 +292,7 @@ public class LoginActivity extends Activity {
 					Session session = ParseFacebookUtils.getSession();
 					if (session != null && session.isOpened()) {
 						makeMeRequest();
+						showMainActivity();
 					}
 
 					//showUserDetailsActivity();
@@ -299,6 +300,7 @@ public class LoginActivity extends Activity {
 					Log.d(LOG_TAG,
 							"User logged in through Facebook!");
 					makeMeRequest();
+					showMainActivity();
 					//showUserDetailsActivity();
 				}
 			}

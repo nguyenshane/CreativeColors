@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.parse.ParseQueryAdapter;
+import com.parse.ParseUser;
 
 public class FriendListActivity extends ListActivity {
 
@@ -29,7 +31,8 @@ public class FriendListActivity extends ListActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		//getMenuInflater().inflate(R.menu.activity_meal_list, menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.friendlist, menu);
 		return true;
 	}
 
@@ -38,23 +41,18 @@ public class FriendListActivity extends ListActivity {
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		/*switch (item.getItemId()) {
+		switch (item.getItemId()) {
 
-		case R.id.action_refresh: {
-			updateMealList();
+		case R.id.menuRefresh: {
+			updateFriendList();
 			break;
 		}
 
-		case R.id.action_favorites: {
-			showFavorites();
+		case R.id.menuLogout: {
+			logout();
 			break;
 		}
-
-		case R.id.action_new: {
-			newMeal();
-			break;
 		}
-		}*/
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -62,6 +60,23 @@ public class FriendListActivity extends ListActivity {
 		friendAdapter.loadObjects();
 		setListAdapter(friendAdapter);
 	}
+	
+	private void logout() {
+		// Log the user out
+		ParseUser.logOut();
+		com.facebook.Session fbs = com.facebook.Session.getActiveSession();
+		if (fbs == null) {
+		    fbs = new com.facebook.Session(this);
+		    com.facebook.Session.setActiveSession(fbs);
+		  }
+		  fbs.closeAndClearTokenInformation();
+		// Back to login activity
+		Intent intent = new Intent(this, LoginActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+	}
+
 
 	private void newGame() {
 		//Intent i = new Intent(this, NewMealActivity.class);

@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
         facebook:preset_size="small" />
 
     <TextView
@@ -44,14 +45,14 @@
         android:paddingRight="3dip" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/buttonInvite"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/score"
-        android:layout_alignBottom="@+id/score"
+        android:layout_alignTop="@+id/icon"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
         android:text="Invite" />
 
 </RelativeLayout>
