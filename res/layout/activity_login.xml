@@ -11,7 +11,8 @@
         android:layout_gravity="center"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone"
+        android:background="@drawable/gradient" >
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
@@ -34,7 +35,8 @@
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient" >
 
         <LinearLayout
             style="@style/LoginFormContainer"
@@ -79,6 +81,8 @@
                 android:layout_marginTop="16dp"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"
+                android:background="#3B5998"
+                android:textColor="@color/player_text"
                 android:onClick="onLoginFBButtonClicked"
                 android:text="@string/action_sign_in_fb" />
 

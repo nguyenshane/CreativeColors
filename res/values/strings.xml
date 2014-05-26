@@ -12,6 +12,7 @@
     <string name="blue_description">blue gem button</string>
     <string name="green_description">green gem button</string>
     <string name="yellow_description">yellow gem button</string>
+    <string name="back_description">back button</string>
     <string name="app_id">576200872479010</string>
     <string name="action_sign_in_fb">Sign in using Facebook</string>
     <string name ="playerInfo">player info</string>

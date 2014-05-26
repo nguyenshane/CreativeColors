@@ -1,114 +1,17 @@
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.nguyenshane.creativecolors.MainActivity"
-    android:background="@color/bg_color" >
-    
-   <TableLayout
+    android:background="@color/bg_color"
+    tools:context="com.nguyenshane.creativecolors.MainActivity" >
+
+    <TableLayout
+        android:id="@+id/tableLayout1"
         android:layout_width="wrap_content"
-        android:background="@color/bg_color"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true">
-
-        <TableRow
-            android:id="@+id/tableRow1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal" >
-
-            <ImageButton
-
-                android:id="@+id/button1"
-                android:contentDescription="@string/green_description"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/green_button_controller"
-                android:paddingLeft="@dimen/activity_vertical_margin" 
-                android:onClick="onClickButton0"/>
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <ImageButton
-                android:id="@+id/button3"
-                android:contentDescription="@string/yellow_description"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/yellow_gem" />
-
-            <ImageButton
-                android:id="@+id/button4"
-                android:contentDescription="@string/blue_description"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/blue_gem"/>
-            <!-- 
-                android:id="@+id/button1"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:onClick="onClickButton1"
-                android:background="@drawable/yellow_button_controller" -->
-
-            <ImageButton
-                android:id="@+id/button2"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:onClick="onClickButton2"
-                android:background="@drawable/blue_button_controller" />>
->>>>>>> 4fadb09014a52cb44f13c3d22704480be6a6c9b4
-
-        </TableRow>
-        
-        <TableRow
-            android:id="@+id/tableRow3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal" >
-
-<<<<<<< HEAD
-            <ImageButton
-                android:id="@+id/button2"
-                android:contentDescription="@string/red_description"
-=======
-            <ImageButton
-                android:id="@+id/button3"
->>>>>>> 4fadb09014a52cb44f13c3d22704480be6a6c9b4
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:onClick="onClickButton3"
-                android:background="@drawable/red_button_controller" />
-
-        </TableRow>
-       
-    </TableLayout>
-
-</RelativeLayout>
-<!--  
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.nguyenshane.creativecolors.MainActivity"
-    android:background="@color/bg_color" >
-    
-   <TableLayout
-        android:layout_width="wrap_content"
-        android:background="@color/bg_color"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true" 
+        android:background="@color/bg_color">
 
         <TableRow
             android:id="@+id/tableRow1"
@@ -121,10 +24,10 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/green_gem"
-                android:paddingLeft="@dimen/activity_vertical_margin" 
-                android:onClick="onClickButton0" />
-
+                android:background="@drawable/green_button_controller"
+                android:contentDescription="@string/green_description"
+                android:onClick="onClickButton0"
+                android:paddingLeft="@dimen/activity_vertical_margin" />
         </TableRow>
 
         <TableRow
@@ -138,18 +41,18 @@
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/yellow_gem"
-                android:onClick="onClickButton1" />
+                android:contentDescription="@string/yellow_description" />
 
             <ImageButton
                 android:id="@+id/button2"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/blue_gem"
-                android:onClick="onClickButton2"/>
-
+                android:background="@drawable/blue_button_controller"
+                android:contentDescription="@string/blue_description"
+                android:onClick="onClickButton2" />
         </TableRow>
-        
+
         <TableRow
             android:id="@+id/tableRow3"
             android:layout_width="wrap_content"
@@ -161,13 +64,10 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/red_gem"
+                android:background="@drawable/red_button_controller"
+                android:contentDescription="@string/red_description"
                 android:onClick="onClickButton3" />
-
         </TableRow>
-       
     </TableLayout>
 
 </RelativeLayout>
-
--->
