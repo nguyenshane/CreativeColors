@@ -1,5 +1,5 @@
-// Some notes:
-// Status : 0 = offline, 1 = ready to play, 2 = my turn, 3 = opp turn, 4 = I won, 5 = opp won
+//Some notes:
+// Status : 0 = offline, 1 = ready to play, 2 = playing
 
 package com.nguyenshane.creativecolors;
 
@@ -12,26 +12,23 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 import android.app.Activity;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
->>>>>>> 585bf678de856b5eb195faaa27cb86da033cf7d2
 import android.graphics.LightingColorFilter;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
->>>>>>> 4fadb09014a52cb44f13c3d22704480be6a6c9b4
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -54,14 +51,13 @@ public class MainActivity extends Activity {
 	private ParseUser currentUser, currOpp;
 	private ParseQuery<ParseObject> query;
 	private ImageButton ib;
-	private int Rid, Rcontroller, Rglow;
-	private boolean isMyTurn, isQuest;
+	private int Rid, Rcontroller, Rglow, score = 0;
+	private boolean isMyTurn, isQuest, pushLose = false;
 	private ArrayList<Integer> myArrayButton, oppArrayButton;
-	private String oppChannel;
-	
-
+	private String oppId, myId, oppName, myName;
 
 	//Buttons 
+	ImageButton imageButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,29 +66,31 @@ public class MainActivity extends Activity {
 
 		// Create the Parse object
 		query = ParseQuery.getQuery("Post");
-		PushService.setDefaultPushCallback(this, MainActivity.class);
-		PushService.subscribe(this, "pJDqv2DPP4", MainActivity.class);
-		ParseInstallation.getCurrentInstallation().saveInBackground();
+		currentUser = ParseUser.getCurrentUser();
 
 		oppArrayButton = new ArrayList<Integer>();
 		myArrayButton = new ArrayList<Integer>();
-		oppArrayButton.add(0);
+
+		/*oppArrayButton.add(0);
 		oppArrayButton.add(1);
 		oppArrayButton.add(2);
 		oppArrayButton.add(3);
 
-
-		glowButtonArray(oppArrayButton,1000);
+		glowButtonArray(oppArrayButton,1000);*/
 
 		isQuest = true;
 		isMyTurn = true;
-		oppChannel = "pJDqv2DPP4";
+		myId = "ch" + ParseUser.getCurrentUser().getObjectId();
+		oppId = "";
+		oppName = "";
+		myName = ParseUser.getCurrentUser().getUsername();
+
+		newGame();
 
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
@@ -110,20 +108,20 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-
-
-	public void onClickButton0(View v){
-		//changing to glow effect after press
-		ib = (ImageButton)findViewById(R.id.button1);
-	    View.OnClickListener imgButtonHandler = new View.OnClickListener() {
-	        public void onClick(View v) {
-	            ib.setBackgroundResource(R.drawable.green_gem_glow);
-	        }
-	    };
-	    
-	    ib.setOnClickListener(imgButtonHandler);
+	@Override
+	protected void onPause() {
+		currentUser.put("status", 1);
+		currentUser.saveInBackground();
+		super.onPause();
 	}
-	    
+
+	@Override
+	protected void onResume() {
+		currentUser.put("status", 2);
+		currentUser.saveInBackground();
+		super.onResume();
+	}
+
 	public void checkTurn(){
 		int status = currentUser.getInt("status");
 		if(status == 2) isMyTurn = true;
@@ -133,61 +131,145 @@ public class MainActivity extends Activity {
 	public void nextTurn(){
 		// next turn is my turn
 		if (!isMyTurn){
-			//currentUser.put("status", 2);
 			enableButtons();
 			isMyTurn = true;	
 		}
 		// next turn is opp turn
 		else { 
-			//currentUser.put("status", 3);
 			disableButtons();
 			pullOppArray();
 			isMyTurn = false;
-			glowButtonArray(oppArrayButton,1000);
+			if(!isQuest){
+				setStatus(2);
+				glowButtonArray(oppArrayButton,1000);
+			}
 			nextTurn();
 		}
-		/*
-		try {
-			currentUser.save();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+	}
+
+	public void setStatus(int status){
+		// 0: my turn, 1: opp turn, 2: showing opp turn, 3: lose, 4: won
+		TextView tv = (TextView) findViewById(R.id.textViewStatus);
+		switch(status) {
+		case 0: 
+			tv.setText("Your turn");
+			tv.setBackgroundResource(R.drawable.green_button);
+			break;
+		case 1: 
+			tv.setText(oppName + "'s turn");
+			tv.setBackgroundResource(R.drawable.yellow_button);
+			break;
+		case 2: 
+			tv.setText("Showing " + oppName + "'s move");
+			tv.setBackgroundResource(R.drawable.red_button);
+			break;
+		case 3: 
+			tv.setText("You lose!");
+			tv.setBackgroundResource(R.drawable.red_button);
+			break;
+		case 4: 
+			tv.setText("You won!");
+			tv.setBackgroundResource(R.drawable.blue_button);
+			break;
+		}	
 	}
 
 
 	//setup new game
 	public void newGame(){
-		currentUser = ParseUser.getCurrentUser();
 
+		// setup 'invitee' to be the Simon (Quest), 
+		// 'inviter' to be Follower 
 		Intent intent = getIntent();
-		isMyTurn = intent.getBooleanExtra("isMyTurn",true);
-		isQuest = intent.getBooleanExtra("isQuest", true);
+		if (intent.getBooleanExtra("confirmed",false)==true){
+			isMyTurn = false;
+			isQuest = false;
+			oppId = intent.getStringExtra("oppId");
+			oppName = intent.getStringExtra("oppName");
+			setStatus(1);
+			disableButtons();
+			// waiting for first reply
+			pullOppArray();
+		}
+		else if (intent.getBooleanExtra("invitation",false)==true){
+			setStatus(0);
+			oppId = intent.getStringExtra("oppId");
+			oppName = intent.getStringExtra("oppName");
+			// send push back confirm to inviter
+			try {
+				JSONObject object = new JSONObject();
+				object.put("action", "pushedConfirm");   
+				object.put("myId", myId);
+				object.put("myName", myName);
 
+				ParsePush pushToOpp = new ParsePush();
+				pushToOpp.setData(object);
+				pushToOpp.setChannel(oppId);
+				pushToOpp.sendInBackground(new SendCallback() {
+					@Override
+					public void done(ParseException e) {
+						// ready for first turn
+						setStatus(0);
+						// Something wrong with push
+						if (e != null) ;	
+					}
+				});
+			} catch (JSONException e) {e.printStackTrace();}
+		}
 	}
 
-	public void pushMyArray(){
-		Log.d(LOG_TAG,"I'm pushing");
-
+	public void pushLose(){
+		Log.d(LOG_TAG,"I'm pushing my lose");
+		disableButtons();
 		try {
 			JSONObject object = new JSONObject();
-			//object.put("alert", "Alert");
-			//object.put("title", "pushedArrayButton");
-			object.put("action", "pushedArrayButton");   
+			object.put("action", "pushedArrayButton");
+			object.put("pushedLose", true);
 			object.put("pushedArrayButton", myArrayButton);
 			ParsePush pushToOpp = new ParsePush();
 			pushToOpp.setData(object);
-			pushToOpp.setChannel(oppChannel);
+			pushToOpp.setChannel(oppId);
 
 			pushToOpp.sendInBackground(new SendCallback() {
 				@Override
 				public void done(ParseException e) {
+					currentUser.increment("score", Math.round(score/2));
 					myArrayButton.clear();
+					//Something wrong with push
+					if (e != null) ;			
+				}
+			});
+		} catch (JSONException e) {e.printStackTrace();}
+	}
+
+	public void setWin(){
+		currentUser.increment("score", Math.round(score));
+		setStatus(4);
+		myArrayButton.clear();
+	}
+
+
+	public void pushMyArray(){
+		Log.d(LOG_TAG,"I'm pushing");
+		score = myArrayButton.size();
+		setStatus(1);
+
+		try {
+			JSONObject object = new JSONObject();
+			object.put("action", "pushedArrayButton");   
+			object.put("pushedArrayButton", myArrayButton);
+			ParsePush pushToOpp = new ParsePush();
+			pushToOpp.setData(object);
+			pushToOpp.setChannel(oppId);
+
+			pushToOpp.sendInBackground(new SendCallback() {
+				@Override
+				public void done(ParseException e) {
 					pullOppArray();
-					
+
 					//Something wrong with push
 					if (e != null) ;
-					
+
 				}
 			});
 		} catch (JSONException e) {e.printStackTrace();}
@@ -195,36 +277,39 @@ public class MainActivity extends Activity {
 	}
 
 	public void pullOppArray(){
+		//pullLose();
 		IntentFilter intentFilter = new IntentFilter("pushedArrayButton");
 		BroadcastReceiver pushReceiver;
 		pushReceiver = new BroadcastReceiver() {
 			public void onReceive(Context context, Intent intent) {
 				Bundle extras = intent.getExtras();
 				String message = extras != null ? extras.getString("com.parse.Data") : ""; 
-				
 				// Parsing JSON to ArrayButton
 				JSONObject jObject;
 				try {
 					jObject = new JSONObject(message);
+					//Log.d(LOG_TAG,"message pulled: " + message);
+					//pushLose = jObject.getBoolean("pushedLose");
 					Gson gson = new Gson();
 					Type arrayButtonType = new TypeToken<ArrayList<Integer>>() {}.getType();
 					oppArrayButton = gson.fromJson(jObject.getString("pushedArrayButton"),arrayButtonType);
-					
-					Log.d(LOG_TAG,"oppArrayButton pulled: " + oppArrayButton);
-					
-					
+					pushLose = jObject.getBoolean("pushedLose");
+
+					Log.d(LOG_TAG,"pushedLose pulled: " + jObject.getString("pushedLose"));
+
+
 				} catch (JSONException e) {	e.printStackTrace();} 
-				
-				
-				// Switch back to my turn
-				nextTurn();
-				
-				
+
+				if(!pushLose){
+					// Switch back to my turn
+					myArrayButton.clear();
+					nextTurn();
+					setStatus(0);
+					
+				} else setWin();
 			}
 		};
 		registerReceiver(pushReceiver, intentFilter);
-		
-		
 	}
 
 	public void checkPattern(){
@@ -233,22 +318,38 @@ public class MainActivity extends Activity {
 			if (myArrayButton.size() <= oppArrayButton.size()){
 				if (myArrayButton.get(myArrayButton.size()-1) == oppArrayButton.get(myArrayButton.size()-1)){
 					Log.d(LOG_TAG,"I'm correct");
-				} else	Log.d(LOG_TAG,"I lose");
+					enableButtons();
+				} else	{
+					setStatus(3);
+					pushLose();
+					myArrayButton.clear();
+					Log.d(LOG_TAG,"I lose");
+				}
 			}
 			if (myArrayButton.size() == oppArrayButton.size()+1){
 				pushMyArray();
+				myArrayButton.clear();
+				disableButtons();
 			}
 			if (myArrayButton.size() > oppArrayButton.size()+1){
 				Log.d(LOG_TAG,"I lose because I pressed too much");
+				myArrayButton.clear();
+				pushLose();
 			}
 		}
 		else {
 			if (myArrayButton.get(myArrayButton.size()-1) == oppArrayButton.get(myArrayButton.size()-1)){
 				if (myArrayButton.size() == oppArrayButton.size() && myArrayButton.equals(oppArrayButton)) pushMyArray();
 				Log.d(LOG_TAG,"I'm correct");
-			} else Log.d(LOG_TAG,"I lose");
+				enableButtons();
+			} else {
+				setStatus(3);
+				pushLose();
+				myArrayButton.clear();
+				Log.d(LOG_TAG,"I lose");
+			}
 		}
-		enableButtons();
+
 	}
 
 	public void onClickButton0(View v){	
@@ -266,76 +367,17 @@ public class MainActivity extends Activity {
 
 	}
 
-
 	public void onClickButton1(View v){
-		//changing to glow effect after press
-		ib = (ImageButton)findViewById(R.id.button3);
-	    View.OnClickListener imgButtonHandler = new View.OnClickListener() {
-	        public void onClick(View v) {
-	            ib.setBackgroundResource(R.drawable.yellow_gem_glow);
-	        }
-	    };
-	    ib.setOnClickListener(imgButtonHandler);
-	    
-	    //Parse
-		query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
-		/*query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
-			public void done(ParseObject pObj, ParseException e) {
-				if (e == null) {
-					pObj.put("button", 1); //pushing notification to the cloud
-					pObj.saveInBackground();
-				}
-			}
-		});*/
 		myArrayButton.add(1);
 		checkPattern();
 	}
 
 	public void onClickButton2(View v){
-		//changing to glow effect after press
-		ib = (ImageButton)findViewById(R.id.button4);
-	    View.OnClickListener imgButtonHandler = new View.OnClickListener() {
-	        public void onClick(View v) {
-	            ib.setBackgroundResource(R.drawable.blue_gem_glow);
-	        }
-	    };
-	    ib.setOnClickListener(imgButtonHandler);
-	    
-	    //Parse
-		query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
-		/*query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
-
-			public void done(ParseObject pObj, ParseException e) {
-				if (e == null) {
-					pObj.put("button", 2); //pushing notifications to the cloud
-					pObj.saveInBackground();
-				}
-			}
-		});*/
 		myArrayButton.add(2);
 		checkPattern();
 	}
 
 	public void onClickButton3(View v){
-		//changing to glow effect after press
-		ib = (ImageButton)findViewById(R.id.button2);
-	    View.OnClickListener imgButtonHandler = new View.OnClickListener() {
-	        public void onClick(View v) {
-	            ib.setBackgroundResource(R.drawable.red_gem_glow);
-	        }
-	    };
-	    ib.setOnClickListener(imgButtonHandler);
-	    
-	    //Parse
-		query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
-		/*query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
-			public void done(ParseObject pObj, ParseException e) {
-				if (e == null) {
-					pObj.put("button", 3);
-					pObj.saveInBackground();
-				}
-			}
-		});*/
 		myArrayButton.add(3);
 		checkPattern();
 	}
@@ -354,36 +396,11 @@ public class MainActivity extends Activity {
 			}
 			public void onFinish(){
 				enableButtons();
+				setStatus(0);
 			}
 		}.start();
 
 	}
-
-
-	/**This method is for notifying the other client that
-	 * a new pattern has been submitted - The glow effect**/
-	public void glowButton(int buttonId, long duration){
-		switch(buttonId) {
-			case 0: Rid = R.id.button0; 
-					Rcontroller = R.drawable.green_button_controller; 
-					Rglow = R.drawable.green_gem_glow;
-					break;
-			case 1: Rid = R.id.button1; 
-					Rcontroller = R.drawable.yellow_button_controller;
-					Rglow = R.drawable.yellow_gem_glow;
-					break;
-			case 2: Rid = R.id.button2; 
-					Rcontroller = R.drawable.blue_button_controller;
-					Rglow = R.drawable.blue_gem_glow;
-					break;
-			case 3: Rid = R.id.button3; 
-					Rcontroller = R.drawable.red_button_controller;
-					Rglow = R.drawable.red_gem_glow;
-					break;
-			default:Rid = R.id.button0; 
-					Rcontroller = R.drawable.green_button_controller;
-					Rglow = R.drawable.green_gem_glow;
-					break;
 
 	public void disableButtons(){
 		ImageButton tmp = (ImageButton) findViewById(R.id.button0);
@@ -442,5 +459,4 @@ public class MainActivity extends Activity {
 		}.start();
 
 	}
-
 }

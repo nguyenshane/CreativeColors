@@ -22,6 +22,8 @@
     
     <string name="player">player</string>
     <!--<color name="bg_color">#2c2c2c</color>-->
+    
+    <string name="current_status">Current status</string>
 
 
 </resources>

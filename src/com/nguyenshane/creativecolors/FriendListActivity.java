@@ -9,22 +9,39 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
+import com.parse.PushService;
 
 public class FriendListActivity extends ListActivity {
 
-	//private ParseQueryAdapter<User> mainAdapter;
 	private FriendListAdapter friendAdapter;
+	private ParseUser currentUser;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
+		
 		getListView().setClickable(true);
+		
+		// Set to online
+		currentUser = ParseUser.getCurrentUser();
+		currentUser.put("status", 1);
+		currentUser.saveInBackground();
+		
+		// Subscribe to channel
+		PushService.setDefaultPushCallback(this, MainActivity.class);
+		
+		String channel;
+		channel = "ch" + ParseUser.getCurrentUser().getObjectId();
+		PushService.subscribe(this, channel, MainActivity.class);
 		
 		// Subclass of ParseQueryAdapter
 		friendAdapter = new FriendListAdapter(this);
-
+		
 		// Set view
 		setListAdapter(friendAdapter);
 	}
@@ -63,7 +80,10 @@ public class FriendListActivity extends ListActivity {
 	
 	private void logout() {
 		// Log the user out
+		ParseUser.getCurrentUser().put("status", 0);
+		currentUser.saveInBackground();
 		ParseUser.logOut();
+		
 		com.facebook.Session fbs = com.facebook.Session.getActiveSession();
 		if (fbs == null) {
 		    fbs = new com.facebook.Session(this);
