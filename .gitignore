@@ -1,4 +1,3 @@
-
 bin/
 gen/
 .metadata/
@@ -8,3 +7,10 @@ gen/com/nguyenshane/creativecolors/R.java
 bin/jarlist.cache
 
 gen/com/nguyenshane/creativecolors/R.java
+gen/com/nguyenshane/creativecolors/BuildConfig.java
+gen/com/nguyenshane/creativecolors/BuildConfig.java
+gen/com/nguyenshane/creativecolors/BuildConfig.java
+bin/jarlist.cache
+gen/com/nguyenshane/creativecolors/R.java
+gen/com/nguyenshane/creativecolors/R.java
+gen/com/nguyenshane/creativecolors/BuildConfig.java

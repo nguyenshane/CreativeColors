@@ -1,6 +1,7 @@
 //Some notes:
 // Status : 0 = offline, 1 = ready to play, 2 = playing
 
+
 package com.nguyenshane.creativecolors;
 
 import java.lang.reflect.Type;
