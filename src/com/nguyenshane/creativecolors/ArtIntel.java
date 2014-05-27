@@ -5,7 +5,7 @@ import java.util.Random;
 import com.nguyenshane.creativecolors.MainActivity.Colors;
 
 public class ArtIntel {
-	
+	/*
 	public int generateRandom(Colors[] colors) {
 		//int[] randomArray = new int [n];
 		for (int i = 0; i < colors.length; i++) {
@@ -22,5 +22,5 @@ public class ArtIntel {
 		int i = generator.nextInt(3) + 1;
 		return i;
 	}
-
+	*/
 }
