@@ -5,41 +5,32 @@ package com.nguyenshane.creativecolors;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Timer;
+import java.util.Random;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.Rect;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.ParseAnalytics;
-import com.parse.ParseInstallation;
 import com.parse.PushService;
 import com.parse.SendCallback;
 
@@ -55,7 +46,6 @@ public class MainActivity extends Activity {
 	private ArrayList<Integer> myArrayButton, oppArrayButton;
 	private String oppChannel;
 	
-
 
 	//Buttons 
 	ImageButton imageButton;
@@ -106,6 +96,22 @@ public class MainActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+//-------------------AI - COLOR Enums -------------------//
+	public enum COLORS{GREEN, BLUE, YELLOW, RED}
+	
+	//Computer enters random color pattern for user
+	public int[] insertCode(int turn){
+		Random rand = new Random(); 
+		int[] code = new int[turn]; //perhaps this should be a fixed value? 
+		for(int i = 0; i < turn; i++){
+			code[i] = rand.nextInt(3); //inserts random number from 0 to 3
+		}
+		return code; //return the new array of pattern inputs
+	}
+	
+	
+//-------------------------------------------------------//
 
 	public void checkTurn(){
 		int status = currentUser.getInt("status");
