@@ -5,8 +5,6 @@ import java.util.Random;
 import com.nguyenshane.creativecolors.MainActivity.Colors;
 
 public class ArtIntel {
-	
-	
 	/*
 	public int generateRandom(Colors[] colors) {
 		//int[] randomArray = new int [n];
