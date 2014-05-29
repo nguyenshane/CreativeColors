@@ -199,6 +199,10 @@ public class MainActivity extends Activity {
 			tv.setText("You won!");
 			tv.setBackgroundResource(R.drawable.blue_button);
 			break;
+		case 5:
+			tv.setText("Would you like to play again?");
+			tv.setBackgroundResource(R.drawable.green_button);
+			break;
 		}	
 	}
 
