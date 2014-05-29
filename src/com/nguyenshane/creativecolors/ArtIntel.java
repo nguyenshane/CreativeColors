@@ -9,10 +9,10 @@ public class ArtIntel {
 	public int generateRandom(Colors[] colors) {
 		//int[] randomArray = new int [n];
 		for (int i = 0; i < colors.length; i++) {
-			int randomArray = Colors.getRandom();
+			//int randomArray = Colors.getRandom();
 			//colors[i] = MainActivity.getRandom();
 		}
-		return randomArray;
+		return 0;//randomArray;
 	}
 	
 	
