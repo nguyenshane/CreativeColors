@@ -159,6 +159,10 @@ public class MainActivity extends Activity {
 		if (!isMyTurn){
 			enableButtons();
 			isMyTurn = true;	
+			setStatus(0);
+			if (oppArrayButton.size() == 1) {
+				setStatus(2); glowButtonArray(oppArrayButton,1000);
+			}
 		}
 		// next turn is opp turn
 		else { 
@@ -221,6 +225,7 @@ public class MainActivity extends Activity {
 			setStatus(0);
 			oppId = intent.getStringExtra("oppId");
 			oppName = intent.getStringExtra("oppName");
+			
 			// send push back confirm to inviter
 			try {
 				JSONObject object = new JSONObject();
@@ -272,6 +277,7 @@ public class MainActivity extends Activity {
 		currentUser.increment("score", Math.round(score));
 		setStatus(4);
 		myArrayButton.clear();
+		disableButtons();
 	}
 
 
@@ -284,6 +290,7 @@ public class MainActivity extends Activity {
 			JSONObject object = new JSONObject();
 			object.put("action", "pushedArrayButton");   
 			object.put("pushedArrayButton", myArrayButton);
+			object.put("pushedLose", false);
 			ParsePush pushToOpp = new ParsePush();
 			pushToOpp.setData(object);
 			pushToOpp.setChannel(oppId);
@@ -326,11 +333,11 @@ public class MainActivity extends Activity {
 
 				} catch (JSONException e) {	e.printStackTrace();} 
 
-				if(!pushLose){
+				if(pushLose == false){
 					// Switch back to my turn
 					myArrayButton.clear();
 					nextTurn();
-					setStatus(0);
+					Log.d(LOG_TAG,"I'm here");
 					
 				} else setWin();
 			}
