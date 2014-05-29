@@ -19,7 +19,7 @@
     <string name="menuitem_refresh">Refresh</string>
     <string name="menuitem_logout">Logout</string> 
     <string name ="playerInfo">player info</string>
-    
+    <string name ="current_status">current status</string>
     <string name="player">player</string>
     <!--<color name="bg_color">#2c2c2c</color>-->
 

@@ -23,11 +23,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-<<<<<<< HEAD
-=======
+
 import android.widget.TextView;
 import android.widget.Toast;
->>>>>>> cadcf0753bfbb8eff74066f0c5f2475d611be484
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -160,7 +158,7 @@ public class MainActivity extends Activity {
 			enableButtons();
 			isMyTurn = true;	
 			setStatus(0);
-			if (oppArrayButton.size() == 1) {
+			if (!isQuest && oppArrayButton.size() == 1) {
 				setStatus(2); glowButtonArray(oppArrayButton,1000);
 			}
 		}
