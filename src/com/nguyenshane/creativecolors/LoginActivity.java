@@ -7,10 +7,28 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+<<<<<<< HEAD
+=======
+import com.facebook.FacebookRequestError;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphUser;
+import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseInstallation;
+import com.parse.ParseUser;
+import com.parse.PushService;
+import com.parse.SaveCallback;
+
+>>>>>>> FETCH_HEAD
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -40,6 +58,7 @@ import com.parse.ParseUser;
  */
 public class LoginActivity extends Activity {
 	final static String LOG_TAG = "LoginActivity";
+	Context context;
 
 	/**
 	 * A dummy authentication store containing known user names and passwords.
@@ -72,15 +91,16 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_login);
+		
+		context = this;
 
 		// Check if there is a currently logged in user
 		// and they are linked to a Facebook account.
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
 			// Go to the another activity
-			//showUserDetailsActivity();
+			showMainActivity();
 		}
 
 		// Set up the login form.
@@ -309,8 +329,8 @@ public class LoginActivity extends Activity {
 	}
 	
 	private void showMainActivity() {
-		Intent intent = new Intent(this, FriendListActivity.class);
-		startActivity(intent);
+		Intent intent = new Intent(context, FriendListActivity.class);
+		startActivity(intent);		
 	}
 
 
@@ -331,6 +351,7 @@ public class LoginActivity extends Activity {
 						// Save the user profile info in a user property
 						ParseUser currentUser = ParseUser.getCurrentUser();
 						currentUser.put("profile", userProfile);
+						currentUser.put("username", user.getName());
 						currentUser.saveInBackground();
 
 						// Show another activity

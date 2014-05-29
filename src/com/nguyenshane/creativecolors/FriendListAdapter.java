@@ -37,7 +37,6 @@ public class FriendListAdapter extends ParseQueryAdapter<ParseUser> {
 				// Here we can configure a ParseQuery to display
 				ParseQuery query = ParseUser.getQuery();
 				//query.orderByDescending("score");
-				Log.d("FLA", query.toString());
 				return query;
 			}
 		});
@@ -54,8 +53,8 @@ public class FriendListAdapter extends ParseQueryAdapter<ParseUser> {
 		String realname = "Guest", facebookId = null;
 		int score = user.getInt("score");
 		int status = user.getInt("status");
-		final String oppId = user.getObjectId();
-		final String myId = ParseUser.getCurrentUser().getObjectId();
+		final String oppId = "ch" + user.getObjectId();
+		final String myId = "ch" + ParseUser.getCurrentUser().getObjectId();
 		final String myName = ParseUser.getCurrentUser().getUsername();
 		
 		Log.d("FLA", Integer.toString(score));
@@ -89,10 +88,12 @@ public class FriendListAdapter extends ParseQueryAdapter<ParseUser> {
 		if(status == 1) statusTextView.setText("Online");
 		if(status == 2) statusTextView.setText("Busy");
 		
-		Button button = (Button) v.findViewById(R.id.buttonInvite);
+		final Button button = (Button) v.findViewById(R.id.buttonInvite);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform push
+            	button.setText("Sending invitation...");
+            	button.setEnabled(false);
             	pushMyInvitation(myId, oppId, myName);
             }
         });
@@ -106,11 +107,10 @@ public class FriendListAdapter extends ParseQueryAdapter<ParseUser> {
 
 		try {
 			JSONObject object = new JSONObject();
-			object.put("alert", "Alert");
-			object.put("title", "Play Creative Colors?");
 			object.put("action", "pushedInvitation");   
 			object.put("myId", myId);
 			object.put("oppId", oppId);
+			object.put("myName", myName);
 			ParsePush pushToOpp = new ParsePush();
 			pushToOpp.setData(object);
 			pushToOpp.setChannel(oppId);
