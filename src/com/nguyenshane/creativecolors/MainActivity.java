@@ -46,11 +46,12 @@ public class MainActivity extends Activity {
 	private ParseObject post;
 	private ParseUser currentUser, currOpp;
 	private ParseQuery<ParseObject> query;
-	private ImageButton ib;
+	//private ImageButton ib;
 	private int Rid, Rcontroller, Rglow, score = 0;
 	private boolean isMyTurn, isQuest, pushLose = false;
 	private ArrayList<Integer> myArrayButton, oppArrayButton;
 	private String oppChannel;
+	BroadcastReceiver pushReceiver;
 	
 
 	private String oppId, myId, oppName, myName;
@@ -136,6 +137,7 @@ public class MainActivity extends Activity {
 	protected void onPause() {
 		currentUser.put("status", 1);
 		currentUser.saveInBackground();
+		unregisterReceiver(pushReceiver);
 		super.onPause();
 	}
 
@@ -165,7 +167,7 @@ public class MainActivity extends Activity {
 		// next turn is opp turn
 		else { 
 			disableButtons();
-			pullOppArray();
+			//pullOppArray();
 			isMyTurn = false;
 			if(!isQuest){
 				setStatus(2);
@@ -239,6 +241,8 @@ public class MainActivity extends Activity {
 					public void done(ParseException e) {
 						// ready for first turn
 						setStatus(0);
+						// waiting for first reply
+						pullOppArray();
 						// Something wrong with push
 						if (e != null) ;	
 					}
@@ -296,7 +300,7 @@ public class MainActivity extends Activity {
 			pushToOpp.sendInBackground(new SendCallback() {
 				@Override
 				public void done(ParseException e) {
-					pullOppArray();
+					//pullOppArray();
 
 					//Something wrong with push
 					if (e != null) ;
@@ -310,7 +314,7 @@ public class MainActivity extends Activity {
 	public void pullOppArray(){
 		//pullLose();
 		IntentFilter intentFilter = new IntentFilter("pushedArrayButton");
-		BroadcastReceiver pushReceiver;
+		
 		pushReceiver = new BroadcastReceiver() {
 			public void onReceive(Context context, Intent intent) {
 				Bundle extras = intent.getExtras();
@@ -415,8 +419,9 @@ public class MainActivity extends Activity {
 
 	public void glowButtonArray(final ArrayList<Integer> arrayButton, final long duration){
 		disableButtons();
-
-		CountDownTimer timer2 = new CountDownTimer(duration*(arrayButton.size()+1), duration){
+		// show status of showing glow
+		setStatus(2);
+		new CountDownTimer(duration*(arrayButton.size()+1), duration){
 			int count = 0;
 
 			public void onTick(long remainingTimeMillis){
@@ -430,6 +435,7 @@ public class MainActivity extends Activity {
 				setStatus(0);
 			}
 		}.start();
+		// show status of my turn
 
 	}
 
@@ -456,38 +462,54 @@ public class MainActivity extends Activity {
 	}
 
 	public void glowButton(int buttonId, long duration){
+		duration -= 100;
+		
 		switch(buttonId) {
-		case 0: Rid = R.id.button0; 
-		Rcontroller = R.drawable.green_button_controller;
-		Rglow = R.drawable.green_gem_glow;
-		break;
-		case 1: Rid = R.id.button1; 
-		Rcontroller = R.drawable.yellow_button_controller;
-		Rglow = R.drawable.yellow_gem_glow;
-		break;
-		case 2: Rid = R.id.button2; 
-		Rcontroller = R.drawable.blue_button_controller;
-		Rglow = R.drawable.blue_gem_glow;
-		break;
-		case 3: Rid = R.id.button3; 
-		Rcontroller = R.drawable.red_button_controller;
-		Rglow = R.drawable.red_gem_glow;
-		break;
-		default:Rid = R.id.button0; 
-		Rcontroller = R.drawable.green_button_controller;
-		Rglow = R.drawable.green_gem_glow;
-		break;
+		case 0: 
+			ImageButton ib0 = (ImageButton) findViewById(R.id.button0);
+			ib0.setBackgroundResource(R.drawable.green_gem_glow);
+			new CountDownTimer(duration-100, duration-100){
+				public void onTick(long remainingTimeMillis){}
+				public void onFinish(){
+					ImageButton ib0 = (ImageButton) findViewById(R.id.button0);
+					ib0.setBackgroundResource(R.drawable.green_button_controller);
+				}
+			}.start();
+			break;
+		case 1: 
+			ImageButton ib1 = (ImageButton) findViewById(R.id.button1);
+			ib1.setBackgroundResource(R.drawable.yellow_gem_glow);
+			new CountDownTimer(duration-100, duration-100){
+				public void onTick(long remainingTimeMillis){}
+				public void onFinish(){
+					ImageButton ib1 = (ImageButton) findViewById(R.id.button1);
+					ib1.setBackgroundResource(R.drawable.yellow_button_controller);
+				}
+			}.start();
+			break;
+		case 2: 
+			ImageButton ib2 = (ImageButton) findViewById(R.id.button2);
+			ib2.setBackgroundResource(R.drawable.blue_gem_glow);
+			new CountDownTimer(duration-100, duration-100){
+				public void onTick(long remainingTimeMillis){}
+				public void onFinish(){
+					ImageButton ib2 = (ImageButton) findViewById(R.id.button2);
+					ib2.setBackgroundResource(R.drawable.blue_button_controller);
+				}
+			}.start();
+			break;
+		case 3: 
+			ImageButton ib3 = (ImageButton) findViewById(R.id.button3);
+			ib3.setBackgroundResource(R.drawable.red_gem_glow);
+			new CountDownTimer(duration-100, duration-100){
+				public void onTick(long remainingTimeMillis){}
+				public void onFinish(){
+					ImageButton ib3 = (ImageButton) findViewById(R.id.button3);
+					ib3.setBackgroundResource(R.drawable.red_button_controller);
+				}
+			}.start();
+			break;
 		}
-
-		ib = (ImageButton) findViewById(Rid);
-		ib.setBackgroundResource(Rglow);
-
-		CountDownTimer timer = new CountDownTimer(duration-100, duration-100){
-			public void onTick(long remainingTimeMillis){}
-			public void onFinish(){
-				ib.setBackgroundResource(Rcontroller);
-			}
-		}.start();
 
 	}
 }
