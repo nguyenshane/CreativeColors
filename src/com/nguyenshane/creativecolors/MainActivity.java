@@ -12,18 +12,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,26 +45,20 @@ import com.parse.PushService;
 import com.parse.SendCallback;
 
 public class MainActivity extends Activity {
-	
-	
+
 	static final String LOG_TAG = "MainActivity";
 	public enum Colors {GREEN, RED, YELLOW, BLUE} // AI
 	private ParseObject post;
 	private ParseUser currentUser, currOpp;
 	private ParseQuery<ParseObject> query;
-	//private ImageButton ib;
-	private int Rid, Rcontroller, Rglow, score = 0;
+	private int score = 0;
 	private boolean isMyTurn, isQuest, pushLose = false;
 	private ArrayList<Integer> myArrayButton, oppArrayButton;
-	private String oppChannel;
-	BroadcastReceiver pushReceiver;
-	
-
+	private BroadcastReceiver pushReceiver;
+	private SoundPool soundPool;
+	private int sound0, sound1, sound2, sound3, soundwin, soundlose;
+	private ImageButton imageButton;
 	private String oppId, myId, oppName, myName;
-
-
-	//Buttons 
-	ImageButton imageButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,22 +72,26 @@ public class MainActivity extends Activity {
 		oppArrayButton = new ArrayList<Integer>();
 		myArrayButton = new ArrayList<Integer>();
 
-		/*oppArrayButton.add(0);
-		oppArrayButton.add(1);
-		oppArrayButton.add(2);
-		oppArrayButton.add(3);
-
-		glowButtonArray(oppArrayButton,1000);*/
-
 		isQuest = true;
 		isMyTurn = true;
 		myId = "ch" + ParseUser.getCurrentUser().getObjectId();
-		oppId = "";
-		oppName = "";
+		oppId = "";	oppName = "";
 		myName = ParseUser.getCurrentUser().getUsername();
 
-		newGame();
+		// Set the hardware buttons to control the music
+		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		// Load the sound
+		soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+		sound0 = soundPool.load(this, R.raw.green, 1);
+		sound1 = soundPool.load(this, R.raw.yellow, 1);
+		sound2 = soundPool.load(this, R.raw.blue, 1);
+		sound3 = soundPool.load(this, R.raw.red, 1);
+		soundwin = soundPool.load(this, R.raw.win, 1);
+		soundlose = soundPool.load(this, R.raw.lose, 1);
+		// Attach sound to 4 buttons
 
+
+		newGame();
 	}
 
 	@Override
@@ -108,9 +112,9 @@ public class MainActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-//-------------------AI - COLOR Enums -------------------//
-	
+
+	//-------------------AI - COLOR Enums -------------------//
+
 	//Computer enters random color pattern for user
 	public Colors[] insertCode(){
 		Random rand = new Random(); 
@@ -129,9 +133,9 @@ public class MainActivity extends Activity {
 		}
 		return code; //return the new array of pattern inputs
 	}
-	
-	
-//-------------------------------------------------------//
+
+
+	//-------------------------------------------------------//
 
 	@Override
 	protected void onPause() {
@@ -148,12 +152,6 @@ public class MainActivity extends Activity {
 		super.onResume();
 	}
 
-	public void checkTurn(){
-		int status = currentUser.getInt("status");
-		if(status == 2) isMyTurn = true;
-		else isMyTurn = false;
-	}
-
 	public void nextTurn(){
 		// next turn is my turn
 		if (!isMyTurn){
@@ -161,7 +159,7 @@ public class MainActivity extends Activity {
 			isMyTurn = true;	
 			setStatus(0);
 			if (!isQuest && oppArrayButton.size() == 1) {
-				setStatus(2); glowButtonArray(oppArrayButton,1000);
+				setStatus(2); glowButtonArray(oppArrayButton,1100);
 			}
 		}
 		// next turn is opp turn
@@ -171,10 +169,39 @@ public class MainActivity extends Activity {
 			isMyTurn = false;
 			if(!isQuest){
 				setStatus(2);
-				glowButtonArray(oppArrayButton,1000);
+				glowButtonArray(oppArrayButton,1100);
 			}
 			nextTurn();
 		}
+	}
+
+	// Set Replay Dialog
+	private void throwreplay(boolean isWon){
+		LayoutInflater factory = LayoutInflater.from(this);
+		final View replayDialogView = factory.inflate(
+				R.layout.replay, null);
+		final AlertDialog replayDialog = new AlertDialog.Builder(this).create();
+		replayDialog.setView(replayDialogView);
+		replayDialog.show();
+
+		if(isWon) ((ImageView) replayDialog.findViewById(R.id.replaytitle)).setImageResource(R.drawable.youwon);
+		else ((ImageView) replayDialog.findViewById(R.id.replaytitle)).setImageResource(R.drawable.youlose);
+
+		replayDialog.findViewById(R.id.playagain).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//your business logic 
+				replayDialog.dismiss();
+			}
+		});
+		replayDialog.findViewById(R.id.back).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//your business logic 
+				replayDialog.dismiss();
+				finish();
+			}
+		});
 	}
 
 	public void setStatus(int status){
@@ -229,7 +256,7 @@ public class MainActivity extends Activity {
 			setStatus(0);
 			oppId = intent.getStringExtra("oppId");
 			oppName = intent.getStringExtra("oppName");
-			
+
 			// send push back confirm to inviter
 			try {
 				JSONObject object = new JSONObject();
@@ -257,7 +284,9 @@ public class MainActivity extends Activity {
 
 	public void pushLose(){
 		Log.d(LOG_TAG,"I'm pushing my lose");
+		throwreplay(false);
 		disableButtons();
+		soundPool.play(soundlose, 1f, 1f, 1, 0, 1f);
 		try {
 			JSONObject object = new JSONObject();
 			object.put("action", "pushedArrayButton");
@@ -282,6 +311,8 @@ public class MainActivity extends Activity {
 	public void setWin(){
 		currentUser.increment("score", Math.round(score));
 		setStatus(4);
+		throwreplay(true);
+		soundPool.play(soundwin, 1f, 1f, 1, 0, 1f);
 		myArrayButton.clear();
 		disableButtons();
 	}
@@ -291,6 +322,7 @@ public class MainActivity extends Activity {
 		Log.d(LOG_TAG,"I'm pushing");
 		score = myArrayButton.size();
 		setStatus(1);
+		disableButtons();
 
 		try {
 			JSONObject object = new JSONObject();
@@ -316,9 +348,8 @@ public class MainActivity extends Activity {
 	}
 
 	public void pullOppArray(){
-		//pullLose();
 		IntentFilter intentFilter = new IntentFilter("pushedArrayButton");
-		
+
 		pushReceiver = new BroadcastReceiver() {
 			public void onReceive(Context context, Intent intent) {
 				Bundle extras = intent.getExtras();
@@ -343,8 +374,6 @@ public class MainActivity extends Activity {
 					// Switch back to my turn
 					myArrayButton.clear();
 					nextTurn();
-					Log.d(LOG_TAG,"I'm here");
-					
 				} else setWin();
 			}
 		};
@@ -378,9 +407,13 @@ public class MainActivity extends Activity {
 		}
 		else {
 			if (myArrayButton.get(myArrayButton.size()-1) == oppArrayButton.get(myArrayButton.size()-1)){
-				if (myArrayButton.size() == oppArrayButton.size() && myArrayButton.equals(oppArrayButton)) pushMyArray();
-				Log.d(LOG_TAG,"I'm correct");
-				enableButtons();
+				if (myArrayButton.size() == oppArrayButton.size() && myArrayButton.equals(oppArrayButton)) {
+					pushMyArray();
+					disableButtons();
+				} else {
+					Log.d(LOG_TAG,"I'm correct");
+					enableButtons();
+				}
 			} else {
 				setStatus(3);
 				pushLose();
@@ -392,31 +425,25 @@ public class MainActivity extends Activity {
 	}
 
 	public void onClickButton0(View v){	
-		//Parse Code
-		/*query.getInBackground("gVEyPd7NMM", new GetCallback<ParseObject>() {
-			public void done(ParseObject pObj, ParseException e) {
-				if (e == null) {
-					pObj.put("button", 0);
-					pObj.saveInBackground();
-				}
-			}
-		});*/
+		soundPool.play(sound0, 1f, 1f, 1, 0, 1f);
 		myArrayButton.add(0);
 		checkPattern();
-
 	}
 
 	public void onClickButton1(View v){
+		soundPool.play(sound1, 1f, 1f, 1, 0, 1f);
 		myArrayButton.add(1);
 		checkPattern();
 	}
 
 	public void onClickButton2(View v){
+		soundPool.play(sound2, 1f, 1f, 1, 0, 1f);
 		myArrayButton.add(2);
 		checkPattern();
 	}
 
 	public void onClickButton3(View v){
+		soundPool.play(sound3, 1f, 1f, 1, 0, 1f);
 		myArrayButton.add(3);
 		checkPattern();
 	}
@@ -430,9 +457,8 @@ public class MainActivity extends Activity {
 
 			public void onTick(long remainingTimeMillis){
 				glowButton(arrayButton.get(count), duration);
-				Log.d(LOG_TAG,arrayButton.get(count).toString());
+				//Log.d(LOG_TAG,arrayButton.get(count).toString());
 				count++;
-
 			}
 			public void onFinish(){
 				enableButtons();
@@ -466,15 +492,15 @@ public class MainActivity extends Activity {
 	}
 
 	public void glowButton(int buttonId, long duration){
-		duration -= 100;
-		
+		//duration -= 100;
 		switch(buttonId) {
 		case 0: 
 			ImageButton ib0 = (ImageButton) findViewById(R.id.button0);
-			ib0.setBackgroundResource(R.drawable.green_gem_glow);
+			ib0.setBackgroundResource(R.drawable.green_gem_glow);	
+			soundPool.play(sound0, 1f, 1f, 1, 0, 1f);
 			new CountDownTimer(duration-100, duration-100){
 				public void onTick(long remainingTimeMillis){}
-				public void onFinish(){
+				public void onFinish(){					
 					ImageButton ib0 = (ImageButton) findViewById(R.id.button0);
 					ib0.setBackgroundResource(R.drawable.green_button_controller);
 				}
@@ -483,6 +509,7 @@ public class MainActivity extends Activity {
 		case 1: 
 			ImageButton ib1 = (ImageButton) findViewById(R.id.button1);
 			ib1.setBackgroundResource(R.drawable.yellow_gem_glow);
+			soundPool.play(sound1, 1f, 1f, 1, 0, 1f);
 			new CountDownTimer(duration-100, duration-100){
 				public void onTick(long remainingTimeMillis){}
 				public void onFinish(){
@@ -493,7 +520,8 @@ public class MainActivity extends Activity {
 			break;
 		case 2: 
 			ImageButton ib2 = (ImageButton) findViewById(R.id.button2);
-			ib2.setBackgroundResource(R.drawable.blue_gem_glow);
+			ib2.setBackgroundResource(R.drawable.blue_gem_glow);	
+			soundPool.play(sound2, 1f, 1f, 1, 0, 1f);
 			new CountDownTimer(duration-100, duration-100){
 				public void onTick(long remainingTimeMillis){}
 				public void onFinish(){
@@ -505,15 +533,17 @@ public class MainActivity extends Activity {
 		case 3: 
 			ImageButton ib3 = (ImageButton) findViewById(R.id.button3);
 			ib3.setBackgroundResource(R.drawable.red_gem_glow);
+			// Sound
+			soundPool.play(sound3, 1f, 1f, 1, 0, 1f);
 			new CountDownTimer(duration-100, duration-100){
 				public void onTick(long remainingTimeMillis){}
 				public void onFinish(){
+
 					ImageButton ib3 = (ImageButton) findViewById(R.id.button3);
 					ib3.setBackgroundResource(R.drawable.red_button_controller);
 				}
 			}.start();
 			break;
 		}
-
 	}
 }

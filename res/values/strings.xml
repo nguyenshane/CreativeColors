@@ -21,6 +21,9 @@
     <string name ="playerInfo">player info</string>
     <string name ="current_status">current status</string>
     <string name="player">player</string>
+    <string name="play_again">PLAY AGAIN</string>
+    <string name="back">BACK</string>
+    <string name="computer">Computer</string>
     <!--<color name="bg_color">#2c2c2c</color>-->
 
 

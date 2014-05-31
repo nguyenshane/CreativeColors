@@ -33,9 +33,11 @@ public class FriendListAdapter extends ParseQueryAdapter<ParseUser> {
 
 	public FriendListAdapter(Context context) {
 		super(context, new ParseQueryAdapter.QueryFactory<ParseUser>() {
+			
 			public ParseQuery<ParseUser> create() {
 				// Here we can configure a ParseQuery to display
 				ParseQuery query = ParseUser.getQuery();
+				query.whereNotEqualTo("objectId", "null");
 				//query.orderByDescending("score");
 				return query;
 			}

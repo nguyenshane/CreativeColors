@@ -1,13 +1,20 @@
 package com.nguyenshane.creativecolors;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ListView;
 
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -25,7 +32,11 @@ public class FriendListActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		
-		getListView().setClickable(true);
+		ListView lv = getListView();
+		
+		lv.setClickable(true);
+		View header = getLayoutInflater().inflate(R.layout.header_friend_list, null);
+		lv.addHeaderView(header);
 		
 		// Set to online
 		currentUser = ParseUser.getCurrentUser();
@@ -42,17 +53,27 @@ public class FriendListActivity extends ListActivity {
 		// Subclass of ParseQueryAdapter
 		friendAdapter = new FriendListAdapter(this);
 		
+		
+		
+		
 		// Set view
 		setListAdapter(friendAdapter);
+		
 	}
-
+	
+	@Override
+	protected void onResume() {
+		updateFriendList();
+		super.onResume();
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.friendlist, menu);
 		return true;
 	}
-
+	
 	/*
 	 * Refreshing the list will be controlled from the Action Bar
 	 */
@@ -95,12 +116,6 @@ public class FriendListActivity extends ListActivity {
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
-	}
-
-
-	private void newGame() {
-		//Intent i = new Intent(this, NewMealActivity.class);
-		//startActivityForResult(i, 0);
 	}
 
 	@Override

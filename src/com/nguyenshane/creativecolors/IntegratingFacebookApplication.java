@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseUser;
 
 public class IntegratingFacebookApplication extends Application {
 
@@ -20,5 +21,16 @@ public class IntegratingFacebookApplication extends Application {
 		ParseFacebookUtils.initialize(getString(R.string.app_id));
 
 	}
+	
+	@Override
+	public void onTrimMemory(int level) {
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		if(currentUser!=null){
+		ParseUser.getCurrentUser().put("status", 0);
+		ParseUser.getCurrentUser().saveInBackground();
+		}
+		super.onTrimMemory(level);
+	}
+
 
 }
