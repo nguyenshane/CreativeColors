@@ -31,49 +31,56 @@ public class FriendListActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		
+
 		ListView lv = getListView();
-		
+
 		lv.setClickable(true);
 		View header = getLayoutInflater().inflate(R.layout.header_friend_list, null);
 		lv.addHeaderView(header);
-		
+
 		// Set to online
 		currentUser = ParseUser.getCurrentUser();
 		currentUser.put("status", 1);
 		currentUser.saveInBackground();
-		
+
 		// Subscribe to channel
 		PushService.setDefaultPushCallback(this, MainActivity.class);
-		
+
 		String channel;
 		channel = "ch" + ParseUser.getCurrentUser().getObjectId();
 		PushService.subscribe(this, channel, MainActivity.class);
-		
+
 		// Subclass of ParseQueryAdapter
-		friendAdapter = new FriendListAdapter(this);
-		
-		
-		
-		
+		friendAdapter = new FriendListAdapter(this,currentUser.getObjectId());
+
+
 		// Set view
 		setListAdapter(friendAdapter);
-		
+
 	}
-	
+
+	public void onClickComputerButton(View v){
+		Log.d("FLA", "Computer Button");
+		// Go to AI activity
+		Intent intent = new Intent(this, AIActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+	}
+
 	@Override
 	protected void onResume() {
 		updateFriendList();
 		super.onResume();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.friendlist, menu);
 		return true;
 	}
-	
+
 	/*
 	 * Refreshing the list will be controlled from the Action Bar
 	 */
@@ -98,19 +105,19 @@ public class FriendListActivity extends ListActivity {
 		friendAdapter.loadObjects();
 		setListAdapter(friendAdapter);
 	}
-	
+
 	private void logout() {
 		// Log the user out
 		ParseUser.getCurrentUser().put("status", 0);
 		currentUser.saveInBackground();
 		ParseUser.logOut();
-		
+
 		com.facebook.Session fbs = com.facebook.Session.getActiveSession();
 		if (fbs == null) {
-		    fbs = new com.facebook.Session(this);
-		    com.facebook.Session.setActiveSession(fbs);
-		  }
-		  fbs.closeAndClearTokenInformation();
+			fbs = new com.facebook.Session(this);
+			com.facebook.Session.setActiveSession(fbs);
+		}
+		fbs.closeAndClearTokenInformation();
 		// Back to login activity
 		Intent intent = new Intent(this, LoginActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

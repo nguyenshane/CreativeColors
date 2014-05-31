@@ -31,13 +31,13 @@ import com.parse.SendCallback;
 public class FriendListAdapter extends ParseQueryAdapter<ParseUser> {
 	static final String LOG_TAG = "FriendListActivity";
 
-	public FriendListAdapter(Context context) {
+	public FriendListAdapter(Context context, final String objectId) {
 		super(context, new ParseQueryAdapter.QueryFactory<ParseUser>() {
 			
 			public ParseQuery<ParseUser> create() {
 				// Here we can configure a ParseQuery to display
 				ParseQuery query = ParseUser.getQuery();
-				query.whereNotEqualTo("objectId", "null");
+				query.whereNotEqualTo("objectId", objectId);
 				//query.orderByDescending("score");
 				return query;
 			}

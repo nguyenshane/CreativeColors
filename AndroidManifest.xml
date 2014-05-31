@@ -81,7 +81,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="PushInvitationReceiver"
+            android:name="com.nguyenshane.creativecolors.PushInvitationReceiver"
             android:exported="true" >
             <intent-filter>
                 <action android:name="pushedInvitation" >
@@ -89,13 +89,20 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="PushConfirmReceiver"
+            android:name="com.nguyenshane.creativecolors.PushConfirmReceiver"
             android:exported="false" >
             <intent-filter>
                 <action android:name="pushedConfirm" >
                 </action>
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="com.nguyenshane.creativecolors.AIActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_ai"
+            android:theme="@style/FullscreenTheme" >
+        </activity>
     </application>
 
 </manifest>
