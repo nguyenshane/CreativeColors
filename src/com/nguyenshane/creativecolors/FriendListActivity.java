@@ -1,5 +1,8 @@
 package com.nguyenshane.creativecolors;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,7 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.facebook.widget.ProfilePictureView;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
@@ -36,6 +41,33 @@ public class FriendListActivity extends ListActivity {
 
 		lv.setClickable(true);
 		View header = getLayoutInflater().inflate(R.layout.header_friend_list, null);
+		
+		String realname = "Player", facebookId = null;
+		
+		JSONObject jProfile;
+		jProfile = new JSONObject();
+		jProfile = ParseUser.getCurrentUser().getJSONObject("profile");
+		int score = ParseUser.getCurrentUser().getInt("score");
+
+		try {
+			facebookId = jProfile.getString("facebookId");
+			if (facebookId.equals("262637900608368")) realname = "The Unnamed Project";
+			else realname = jProfile.getString("name");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		ProfilePictureView userImage = (ProfilePictureView) header.findViewById(R.id.myicon);
+		if (facebookId!=null){
+			userImage.setProfileId(facebookId);
+		}else userImage.setProfileId(null);
+
+		TextView realnameTextView = (TextView) header.findViewById(R.id.myrealname);
+		realnameTextView.setText(realname);
+		TextView scoreTextView = (TextView) header.findViewById(R.id.myscore);
+		scoreTextView.setText("Score: " + Integer.toString(score));
+		
 		lv.addHeaderView(header);
 
 		// Set to online

@@ -24,7 +24,7 @@
     <string name="player">player</string>
     <string name="play_again">PLAY AGAIN</string>
     <string name="back">BACK</string>
-    <string name="computer">Computer</string>
+    <string name="computer">Single Player Mode</string>
     <!-- <color name="bg_color">#2c2c2c</color> -->
 
     <string name="title_activity_ai">Play with Computer</string>
