@@ -32,6 +32,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -52,13 +53,14 @@ public class MainActivity extends Activity {
 	private ParseUser currentUser, currOpp;
 	private ParseQuery<ParseObject> query;
 	private int score = 0;
-	private boolean isMyTurn, isQuest, pushLose = false;
+	private boolean isMyTurn, isQuest, pushLose = false, restartGame = false;
 	private ArrayList<Integer> myArrayButton, oppArrayButton;
-	private BroadcastReceiver pushReceiver;
+	private BroadcastReceiver pushReceiver, pushReceiver2;
 	private SoundPool soundPool;
 	private int sound0, sound1, sound2, sound3, soundwin, soundlose;
 	private ImageButton imageButton;
 	private String oppId, myId, oppName, myName;
+	private AlertDialog replayDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +90,26 @@ public class MainActivity extends Activity {
 		sound3 = soundPool.load(this, R.raw.red, 1);
 		soundwin = soundPool.load(this, R.raw.win, 1);
 		soundlose = soundPool.load(this, R.raw.lose, 1);
-		// Attach sound to 4 buttons
-
 
 		newGame();
+
+		// Pull confirm replay
+		IntentFilter intentFilter = new IntentFilter("pushedConfirmedRestart");
+		pushReceiver2 = new BroadcastReceiver() {
+			public void onReceive(Context context, Intent intent) {
+				isQuest = true;
+				replayDialog.dismiss();
+				unregisterReceiver(pushReceiver);
+				oppArrayButton.clear();
+				myArrayButton.clear();
+				pushLose = false;
+				score = 0;
+				enableButtons();
+				setStatus(0);
+				pullOppArray();
+			}
+		};
+		registerReceiver(pushReceiver2, intentFilter);
 	}
 
 	@Override
@@ -141,7 +159,13 @@ public class MainActivity extends Activity {
 	protected void onPause() {
 		currentUser.put("status", 1);
 		currentUser.saveInBackground();
-		unregisterReceiver(pushReceiver);
+		if (pushReceiver!=null)
+			try{
+				unregisterReceiver(pushReceiver);
+				unregisterReceiver(pushReceiver2);
+			}catch (Exception e) {
+				// No handle needed
+			}
 		super.onPause();
 	}
 
@@ -175,25 +199,72 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	// restart game
+	public void restartGame(){
+		unregisterReceiver(pushReceiver);
+		oppArrayButton.clear();
+		myArrayButton.clear();
+		pushLose = false;
+		score = 0;
+
+		Log.d(LOG_TAG,"I'm sending push to restart");
+		isQuest = false;
+		// Push confirm replay
+		// send push back confirm to inviter
+		try {
+			JSONObject object = new JSONObject();
+			object.put("action", "pushedConfirmedRestart");   
+			//object.put("restartGame", true);
+			ParsePush pushToOpp = new ParsePush();
+			pushToOpp.setData(object);
+			pushToOpp.setChannel(oppId);
+			pushToOpp.sendInBackground(new SendCallback() {
+				@Override
+				public void done(ParseException e) {
+					// ready for first turn
+					setStatus(1);
+					// waiting for first reply
+					pullOppArray();
+					disableButtons();
+					replayDialog.dismiss();
+					// Something wrong with push
+					if (e != null) ;	
+				}
+			});
+		} catch (JSONException e) {e.printStackTrace();}
+
+	}
+
 	// Set Replay Dialog
 	private void throwreplay(boolean isWon){
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View replayDialogView = factory.inflate(
 				R.layout.replay, null);
-		final AlertDialog replayDialog = new AlertDialog.Builder(this).create();
+		replayDialog = new AlertDialog.Builder(this).create();
 		replayDialog.setView(replayDialogView);
 		replayDialog.show();
 
 		if(isWon) ((ImageView) replayDialog.findViewById(R.id.replaytitle)).setImageResource(R.drawable.youwon);
 		else ((ImageView) replayDialog.findViewById(R.id.replaytitle)).setImageResource(R.drawable.youlose);
 
-		replayDialog.findViewById(R.id.playagain).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				//your business logic 
-				replayDialog.dismiss();
-			}
-		});
+		if(!isQuest){
+			Button bt = (Button) replayDialog.findViewById(R.id.playagain);
+			bt.setText("Waiting...");
+			bt.setEnabled(false);
+
+		} else{
+			replayDialog.findViewById(R.id.playagain).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					restartGame = true;
+					//Set waiting and disable button
+					Button bt = (Button) replayDialog.findViewById(R.id.playagain);
+					bt.setText("Waiting...");
+					bt.setEnabled(false);
+					restartGame();
+				}
+			});
+		}
 		replayDialog.findViewById(R.id.back).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -221,16 +292,12 @@ public class MainActivity extends Activity {
 			tv.setBackgroundResource(R.drawable.red_button);
 			break;
 		case 3: 
-			tv.setText("You lose!");
+			tv.setText("Your score is: " + score);
 			tv.setBackgroundResource(R.drawable.red_button);
 			break;
 		case 4: 
-			tv.setText("You won!");
+			tv.setText("Your score is: " + score);
 			tv.setBackgroundResource(R.drawable.blue_button);
-			break;
-		case 5:
-			tv.setText("Would you like to play again?");
-			tv.setBackgroundResource(R.drawable.green_button);
 			break;
 		}	
 	}

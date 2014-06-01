@@ -1,6 +1,5 @@
 package com.nguyenshane.creativecolors;
 
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -64,13 +63,15 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
+
 		context = this;
-		/*ImageView iv = (ImageView) findViewById(R.id.image);
-		NonScalingBackgroundDrawable nsbd = 
-				new NonScalingBackgroundDrawable(getApplicationContext(), iv, R.drawable.login);
-		iv.setBackgroundDrawable(nsbd);*/
-		
+		/*
+		 * ImageView iv = (ImageView) findViewById(R.id.image);
+		 * NonScalingBackgroundDrawable nsbd = new
+		 * NonScalingBackgroundDrawable(getApplicationContext(), iv,
+		 * R.drawable.login); iv.setBackgroundDrawable(nsbd);
+		 */
+
 		// Check if there is a currently logged in user
 		// and they are linked to a Facebook account.
 		ParseUser currentUser = ParseUser.getCurrentUser();
@@ -79,25 +80,25 @@ public class LoginActivity extends Activity {
 			showMainActivity();
 		}
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
 	}
-	
+
 	public void onLoginFBButtonClicked(View v) {
 		TextView tv = (TextView) findViewById(R.id.sign_in_fb);
 		tv.setText("Signing in...");
 		ProgressBar gb = (ProgressBar) findViewById(R.id.progress_bar);
 		gb.setVisibility(View.VISIBLE);
-		
-		List<String> permissions = Arrays.asList("public_profile","email");
+
+		List<String> permissions = Arrays.asList("public_profile", "email");
 
 		ParseFacebookUtils.logIn(permissions, this, new LogInCallback() {
 			@Override
 			public void done(ParseUser user, ParseException err) {
-				//LoginActivity.this.progressDialog.dismiss();
+				// LoginActivity.this.progressDialog.dismiss();
 				if (user == null) {
 					Log.d(LOG_TAG,
 							"Uh oh. The user cancelled the Facebook login.");
@@ -115,20 +116,18 @@ public class LoginActivity extends Activity {
 						showMainActivity();
 					}
 				} else {
-					Log.d(LOG_TAG,
-							"User logged in through Facebook!");
+					Log.d(LOG_TAG, "User logged in through Facebook!");
 					makeMeRequest(false);
 					showMainActivity();
 				}
 			}
 		});
 	}
-	
+
 	private void showMainActivity() {
 		Intent intent = new Intent(context, FriendListActivity.class);
-		startActivity(intent);		
+		startActivity(intent);
 	}
-
 
 	private void makeMeRequest(final boolean newUser) {
 		Request request = Request.newMeRequest(ParseFacebookUtils.getSession(),
@@ -143,25 +142,25 @@ public class LoginActivity extends Activity {
 						userProfile.put("facebookId", user.getId());
 						userProfile.put("name", user.getName());
 
-
 						// Save the user profile info in a user property
-						ParseUser currentUser = ParseUser.getCurrentUser();
+						ParseUser currentUser = ParseUser
+								.getCurrentUser();
 						currentUser.put("profile", userProfile);
 						currentUser.put("username", user.getName());
-						
-						if (newUser){
+
+						if (newUser) {
 							userProfile.put("status", 1);
 							userProfile.put("score", 0);
 						}
-						
+
 						currentUser.saveInBackground();
 
 						// Show another activity
 						showMainActivity();
 
-
 					} catch (JSONException e) {
-						Log.d(LOG_TAG, "Error parsing returned user data.");
+						Log.d(LOG_TAG,
+								"Error parsing returned user data.");
 					}
 
 				} else if (response.getError() != null) {
