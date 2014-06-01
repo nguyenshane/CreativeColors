@@ -109,6 +109,7 @@ public class AIActivity extends Activity {
 					Log.d(LOG_TAG,"I'm correct");
 					enableButtons();
 				} else	{
+					score = myArrayButton.size();
 					setStatus(3);
 					pushLose();
 					myArrayButton.clear();
@@ -121,6 +122,7 @@ public class AIActivity extends Activity {
 					myArrayButton.clear();
 					nextTurn();
 				} else	{
+					score = myArrayButton.size();
 					setStatus(3);
 					pushLose();
 					myArrayButton.clear();
@@ -187,7 +189,7 @@ public class AIActivity extends Activity {
 			tv.setBackgroundResource(R.drawable.red_button);
 			break;
 		case 3: 
-			tv.setText("You lose (" + oppArrayButton.size() + ") move(s)!");
+			tv.setText("You lose after " + score + " move(s)!");
 			tv.setBackgroundResource(R.drawable.red_button);
 			break;
 		}	
@@ -198,6 +200,7 @@ public class AIActivity extends Activity {
 		disableButtons();
 		soundPool.play(soundlose, 1f, 1f, 1, 0, 1f);
 		currentUser.increment("score", Math.round(score));
+		currentUser.saveInBackground();
 	}
 
 	public void onClickButton0(View v){	

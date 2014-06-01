@@ -101,7 +101,7 @@
             android:name="com.nguyenshane.creativecolors.AIActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_ai"
-            android:theme="@style/FullscreenTheme" >
+            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
         </activity>
     </application>
 

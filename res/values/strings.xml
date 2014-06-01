@@ -27,7 +27,7 @@
     <string name="computer">Single Player Mode</string>
     <!-- <color name="bg_color">#2c2c2c</color> -->
 
-    <string name="title_activity_ai">Play with Computer</string>
+    <string name="title_activity_ai">Single Player Mode</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
