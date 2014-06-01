@@ -47,7 +47,7 @@ import com.parse.PushService;
 import com.parse.SendCallback;
 
 public class MainActivity extends Activity {
-
+//hello
 	static final String LOG_TAG = "MainActivity";
 	public enum Colors {GREEN, RED, YELLOW, BLUE} // AI
 	private ParseObject post;
