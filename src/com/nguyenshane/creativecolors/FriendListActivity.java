@@ -21,9 +21,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.widget.ProfilePictureView;
+import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.parse.PushService;
@@ -32,6 +34,10 @@ public class FriendListActivity extends ListActivity {
 
 	private FriendListAdapter friendAdapter;
 	private ParseUser currentUser;
+	private View header;
+	private TextView scoreTextView;
+	private ProfilePictureView userImage;
+	private String realname = "Player", facebookId = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
@@ -40,9 +46,8 @@ public class FriendListActivity extends ListActivity {
 		ListView lv = getListView();
 
 		lv.setClickable(true);
-		View header = getLayoutInflater().inflate(R.layout.header_friend_list, null);
-		
-		String realname = "Player", facebookId = null;
+		header = getLayoutInflater().inflate(R.layout.header_friend_list, null);
+
 		
 		JSONObject jProfile;
 		jProfile = new JSONObject();
@@ -58,16 +63,17 @@ public class FriendListActivity extends ListActivity {
 			e.printStackTrace();
 		}
 
-		ProfilePictureView userImage = (ProfilePictureView) header.findViewById(R.id.myicon);
+		userImage = (ProfilePictureView) header.findViewById(R.id.myicon);
 		if (facebookId!=null){
 			userImage.setProfileId(facebookId);
 		}else userImage.setProfileId(null);
 
 		TextView realnameTextView = (TextView) header.findViewById(R.id.myrealname);
 		realnameTextView.setText(realname);
-		TextView scoreTextView = (TextView) header.findViewById(R.id.myscore);
+		scoreTextView = (TextView) header.findViewById(R.id.myscore);
 		scoreTextView.setText("Score: " + Integer.toString(score));
-		
+
+
 		lv.addHeaderView(header);
 
 		// Set to online
@@ -85,9 +91,26 @@ public class FriendListActivity extends ListActivity {
 		// Subclass of ParseQueryAdapter
 		friendAdapter = new FriendListAdapter(this,currentUser.getObjectId());
 
-
 		// Set view
 		setListAdapter(friendAdapter);
+
+	}
+
+	private void updateHeader() {
+		ParseUser.getCurrentUser().fetchInBackground(new GetCallback<ParseObject>() {
+			public void done(ParseObject object, ParseException e) {
+				if (e == null) {
+					// Success!
+					if (facebookId!=null){
+						userImage.setProfileId(facebookId);
+					}else userImage.setProfileId(null);
+					int score = ParseUser.getCurrentUser().getInt("score");
+					scoreTextView.setText("Score: " + Integer.toString(score));
+				} else {
+					// Failure!
+				}
+			}
+		});
 
 	}
 
@@ -134,6 +157,7 @@ public class FriendListActivity extends ListActivity {
 	}
 
 	private void updateFriendList() {
+		updateHeader();
 		friendAdapter.loadObjects();
 		setListAdapter(friendAdapter);
 	}

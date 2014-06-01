@@ -22,6 +22,7 @@ import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -182,6 +183,8 @@ public class MainActivity extends Activity {
 			enableButtons();
 			isMyTurn = true;	
 			setStatus(0);
+			vibrate();
+			
 			if (!isQuest && oppArrayButton.size() == 1) {
 				setStatus(2); glowButtonArray(oppArrayButton,1100);
 			}
@@ -189,9 +192,9 @@ public class MainActivity extends Activity {
 		// next turn is opp turn
 		else { 
 			disableButtons();
-			//pullOppArray();
 			isMyTurn = false;
 			if(!isQuest){
+				
 				setStatus(2);
 				glowButtonArray(oppArrayButton,1100);
 			}
@@ -237,6 +240,7 @@ public class MainActivity extends Activity {
 
 	// Set Replay Dialog
 	private void throwreplay(boolean isWon){
+		vibrate();
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View replayDialogView = factory.inflate(
 				R.layout.replay, null);
@@ -515,8 +519,15 @@ public class MainActivity extends Activity {
 		checkPattern();
 	}
 
+	public void vibrate(){
+		// Get instance of Vibrator from current Context
+		Vibrator mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		// Vibrate for 300 milliseconds
+		mVibrator.vibrate(500);
+	}
 	public void glowButtonArray(final ArrayList<Integer> arrayButton, final long duration){
 		disableButtons();
+		vibrate();
 		// show status of showing glow
 		setStatus(2);
 		new CountDownTimer(duration*(arrayButton.size()+1), duration){
