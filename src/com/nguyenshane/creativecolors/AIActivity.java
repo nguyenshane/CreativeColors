@@ -101,6 +101,34 @@ public class AIActivity extends Activity {
 		oppArrayButton.add(random);
 		glowButtonArray(oppArrayButton,800);		
 	}
+	
+//-------------------AI - COLOR Enums Engine -------------------//
+	//Not sure if we should use the enum for this...?
+	//Computer enters random color pattern for user
+	public void insertCode(){
+		Random rand = new Random(); 
+		//Colors[] code = new Colors[8]; //perhaps this should be a fixed value? 
+		for(int i = 0; i < 8; i++){
+			int c = rand.nextInt(3); //inserts random number from 0 to 3
+			if(c == 0){
+				//code[i] = Colors.GREEN;
+				myArrayButton.add(0);
+			}else if(c == 1){
+				//code[i] = Colors.RED;
+				myArrayButton.add(1);
+			}else if(c == 2){
+				//code[i] = Colors.YELLOW;
+				myArrayButton.add(2);
+			}else{
+				//code[i] = Colors.BLUE;
+				myArrayButton.add(3);
+			}
+		}
+		return code; //return the new array of pattern inputs
+	}
+		
+//-------------------------------------------------------//
+
 
 	public void checkPattern(){
 		disableButtons();
